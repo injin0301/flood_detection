@@ -7,7 +7,9 @@ use App\Repository\UtilisateurRepository;
 use Nelmio\ApiDocBundle\Attribute\Model;
 use OpenApi\Attributes as OA;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\InputBag;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Csrf\CsrfToken;
@@ -94,5 +96,19 @@ final class ApiController extends AbstractController
                 ],
             ])
         ]);
+    }
+
+    #[Route('/login', name: '_login', methods: ['POST'])]
+    public function login(Request $request): JsonResponse
+    {
+        $data = $request->request; //application/x-www-form-urlencoded
+
+        if (!$data->has('email') || !$data->has('password')) {
+            return $this->json(['err' => 'Manque de l\'email ou password']);
+        }
+
+        dd($data);
+
+        return $this->json([]);
     }
 }
