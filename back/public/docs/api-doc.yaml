@@ -146,6 +146,12 @@ paths:
       responses:
         default:
           description: ''
+  /api/piece/create:
+    post:
+      operationId: post_app_api_add_piece
+      responses:
+        default:
+          description: ''
   /api/csrf-token/:
     get:
       operationId: get_generate_token_init

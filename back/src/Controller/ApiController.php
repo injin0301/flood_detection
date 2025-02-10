@@ -7,7 +7,6 @@ use App\Entity\Utilisateur;
 use App\Repository\PieceRepository;
 use App\Repository\UtilisateurRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Lexik\Bundle\JWTAuthenticationBundle\LexikJWTAuthenticationBundle;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
 use Nelmio\ApiDocBundle\Attribute\Model;
 use OpenApi\Attributes as OA;
@@ -16,7 +15,6 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Attribute\Route;
-use Symfony\Component\Security\Csrf\CsrfToken;
 use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 use Symfony\Component\Serializer\Encoder\CsvEncoder;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
@@ -46,7 +44,7 @@ final class ApiController extends AbstractController
         content: new OA\JsonContent(
             type: 'object',
             properties: [
-                new OA\Property(property: 'csrf_token', type: 'string')
+                new OA\Property(property: 'csrf_token', type: 'string'),
             ]
         )
     )]
@@ -64,14 +62,14 @@ final class ApiController extends AbstractController
         content: new OA\JsonContent(
             type: 'object',
             properties: [
-                new OA\Property(property: 'error', type: 'string')
+                new OA\Property(property: 'error', type: 'string'),
             ]
         )
     )]
     public function allUtilisateur(
         Request $request,
         UtilisateurRepository $uRepository,
-        CsrfTokenManagerInterface $csrfTokenManager
+        CsrfTokenManagerInterface $csrfTokenManager,
     ): JsonResponse {
         $data = json_decode($request->getContent(), true);
 
@@ -95,10 +93,10 @@ final class ApiController extends AbstractController
                     'piece' => [
                         'id',
                         'nom',
-                        'description'
+                        'description',
                     ],
                 ],
-            ])
+            ]),
         ]);
     }
 
@@ -109,7 +107,7 @@ final class ApiController extends AbstractController
         content: new OA\JsonContent(
             type: 'object',
             properties: [
-                new OA\Property(property: 'csrf_token', type: 'string')
+                new OA\Property(property: 'csrf_token', type: 'string'),
             ]
         )
     )]
@@ -127,7 +125,7 @@ final class ApiController extends AbstractController
         content: new OA\JsonContent(
             type: 'object',
             properties: [
-                new OA\Property(property: 'error', type: 'string')
+                new OA\Property(property: 'error', type: 'string'),
             ]
         )
     )]
@@ -153,7 +151,7 @@ final class ApiController extends AbstractController
                     'description',
                     'capteur',
                 ],
-            ])
+            ]),
         ]);
     }
 
@@ -166,14 +164,17 @@ final class ApiController extends AbstractController
     #[Route('/piece/{piece<\d*>}/delete', name: '_delete_piece', methods: ['DELETE'])]
     public function deletePiece(): JsonResponse
     {
-
         return $this->json([]);
     }
 
     #[Route('/login', name: '_login', methods: ['POST'])]
-    public function login(Request $request, UtilisateurRepository $uRepository, UserPasswordHasherInterface $passwordHasher, JWTTokenManagerInterface $jwtManager): JsonResponse
-    {
-        $data = $request->request; //application/x-www-form-urlencoded
+    public function login(
+        Request $request,
+        UtilisateurRepository $uRepository,
+        UserPasswordHasherInterface $passwordHasher,
+        JWTTokenManagerInterface $jwtManager,
+    ): JsonResponse {
+        $data = $request->request; // application/x-www-form-urlencoded
         if (!$data->has('email') || !$data->has('password')) {
             return $this->json(['err' => 'Manque de l\'email ou password'], 406);
         }
@@ -192,10 +193,9 @@ final class ApiController extends AbstractController
         Request $request,
         UtilisateurRepository $uRepository,
         EntityManagerInterface $em,
-        UserPasswordHasherInterface $passwordHasher
+        UserPasswordHasherInterface $passwordHasher,
     ): JsonResponse {
-
-        $data = $request->request; //application/x-www-form-urlencoded
+        $data = $request->request; // application/x-www-form-urlencoded
 
         if (!$data->has(key: 'email') || !$data->has('password')) {
             return $this->json(['err' => 'Manque de l\'email ou password'], 406);
@@ -223,5 +223,11 @@ final class ApiController extends AbstractController
         $em->flush();
 
         return $this->json(['message' => 'Utilisateur crée'], 201);
+    }
+
+    #[Route('/piece/create', name: '_add_piece', methods: ['POST'])]
+    public function creePiece(Request $request, PieceRepository $pRepository, EntityManagerInterface $em): JsonResponse
+    {
+        return $this->json([]);
     }
 }
