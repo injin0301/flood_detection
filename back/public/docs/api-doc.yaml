@@ -39,6 +39,22 @@ paths:
                 properties:
                   token: { type: string, readOnly: true, nullable: false }
                 type: object
+        '404':
+          description: 'Utilisateur non trouvé'
+          content:
+            application/json:
+              schema:
+                properties:
+                  err: { type: string }
+                type: object
+        '406':
+          description: "Manque de l'email ou password"
+          content:
+            application/json:
+              schema:
+                properties:
+                  err: { type: string }
+                type: object
   /api/all/utilisateurs:
     get:
       operationId: get_app_api_all_utilisateur
@@ -110,9 +126,37 @@ paths:
           schema:
             type: string
             pattern: '\d*'
+      requestBody:
+        description: "les informations de la pièce à mettre à jour pour PATCH, ce n'est pas obligatoire de tout mettre"
+        required: true
+        content:
+          application/json:
+            schema:
+              properties:
+                description:
+                  type: string
+                nom:
+                  type: string
+                idUtilisateur:
+                  type: integer
+              type: object
       responses:
-        default:
-          description: ''
+        '200':
+          description: 'Piece modifié avec succès'
+          content:
+            application/json:
+              schema:
+                properties:
+                  message: { type: string }
+                type: object
+        '406':
+          description: 'Manque de données requises'
+          content:
+            application/json:
+              schema:
+                properties:
+                  err: { type: string }
+                type: object
     patch:
       operationId: patch_app_api_update_piece
       parameters:
@@ -123,9 +167,37 @@ paths:
           schema:
             type: string
             pattern: '\d*'
+      requestBody:
+        description: "les informations de la pièce à mettre à jour pour PATCH, ce n'est pas obligatoire de tout mettre"
+        required: true
+        content:
+          application/json:
+            schema:
+              properties:
+                description:
+                  type: string
+                nom:
+                  type: string
+                idUtilisateur:
+                  type: integer
+              type: object
       responses:
-        default:
-          description: ''
+        '200':
+          description: 'Piece modifié avec succès'
+          content:
+            application/json:
+              schema:
+                properties:
+                  message: { type: string }
+                type: object
+        '406':
+          description: 'Manque de données requises'
+          content:
+            application/json:
+              schema:
+                properties:
+                  err: { type: string }
+                type: object
   '/api/piece/{piece}/delete':
     delete:
       operationId: delete_app_api_delete_piece
@@ -137,21 +209,101 @@ paths:
           schema:
             type: string
             pattern: '\d*'
+      requestBody:
+        description: 'Pour supprimer une pièce'
+        required: false
+        content:
+          application/json:
+            schema:
+              properties:
+                piece:
+                  type: integer
+              type: object
       responses:
-        default:
-          description: ''
+        '204':
+          description: 'Piece supprimée avec succès'
+        '404':
+          description: 'Piece non trouvée'
+          content:
+            application/json:
+              schema:
+                properties:
+                  error: { type: string }
+                type: object
   /api/register/user:
     post:
       operationId: post_app_api_register_user
+      requestBody:
+        description: 'Pour crée un utilisateur'
+        required: true
+        content:
+          application/json:
+            schema:
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+              type: object
       responses:
-        default:
-          description: ''
+        '201':
+          description: 'Utilisateur créé avec succès'
+          content:
+            application/json:
+              schema:
+                properties:
+                  message: { type: string }
+                type: object
+        '406':
+          description: "Manque de l'email ou password"
+          content:
+            application/json:
+              schema:
+                properties:
+                  err: { type: string }
+                type: object
+        '409':
+          description: 'Il existe déjà un utilisateur avec cet email'
+          content:
+            application/json:
+              schema:
+                properties:
+                  err: { type: string }
+                type: object
   /api/piece/create:
     post:
       operationId: post_app_api_add_piece
+      requestBody:
+        description: 'Le body contient les informations de la pièce à créer'
+        required: true
+        content:
+          application/json:
+            schema:
+              properties:
+                description:
+                  type: string
+                nom:
+                  type: string
+                idUtilisateur:
+                  type: integer
+              type: object
       responses:
-        default:
-          description: ''
+        '201':
+          description: 'Piece créée avec succès'
+          content:
+            application/json:
+              schema:
+                properties:
+                  message: { type: string }
+                type: object
+        '406':
+          description: 'Manque de données requises'
+          content:
+            application/json:
+              schema:
+                properties:
+                  err: { type: string }
+                type: object
   /api/csrf-token/:
     get:
       operationId: get_generate_token_init

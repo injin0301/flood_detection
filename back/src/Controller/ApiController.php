@@ -12,6 +12,7 @@ use Nelmio\ApiDocBundle\Attribute\Model;
 use OpenApi\Attributes as OA;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Attribute\Route;
@@ -156,18 +157,139 @@ final class ApiController extends AbstractController
     }
 
     #[Route('/piece/{piece<\d*>}/update', name: '_update_piece', methods: ['PUT', 'PATCH'])]
-    public function updatePiece(Piece $piece, Request $request): JsonResponse
-    {
-        return $this->json([]);
+    #[OA\RequestBody(
+        required: true,
+        description: 'les informations de la pièce à mettre à jour pour PATCH, ce n\'est pas obligatoire de tout mettre',
+        content: new OA\JsonContent(
+            type: 'object',
+            properties: [
+                new OA\Property(property: 'description', type: 'string'),
+                new OA\Property(property: 'nom', type: 'string'),
+                new OA\Property(property: 'idUtilisateur', type: 'integer'),
+            ]
+        )
+    )]
+    #[OA\Response(
+        response: 200,
+        description: 'Piece modifié avec succès',
+        content: new OA\JsonContent(
+            type: 'object',
+            properties: [
+                new OA\Property(property: 'message', type: 'string'),
+            ]
+        )
+    )]
+    #[OA\Response(
+        response: 406,
+        description: 'Manque de données requises',
+        content: new OA\JsonContent(
+            type: 'object',
+            properties: [
+                new OA\Property(property: 'err', type: 'string'),
+            ]
+        )
+    )]
+    public function updatePiece(
+        Piece $piece,
+        Request $request,
+        EntityManagerInterface $em,
+        UtilisateurRepository $uRepository
+    ): JsonResponse {
+        $data = new ParameterBag($this->serializer->decode($request->getContent(), 'json'));
+        if ($request->isMethod(Request::METHOD_PUT)) {
+            foreach (['description', 'nom', 'idUtilisateur'] as $value) {
+                if (!$data->has($value)) {
+                    return $this->json(['err' => "Manque de {$value}"], 406);
+                }
+            }
+            $piece->setDescription($data->getString('description'));
+            $piece->setNom($data->getString('nom'));
+            $piece->setUtilisateur($uRepository->find($data->getInt('idUtilisateur')));
+
+            $em->persist($piece);
+            $em->flush();
+        } elseif ($request->isMethod(Request::METHOD_PATCH)) {
+            if ($data->has('description')) {
+                $piece->setDescription($data->getString('description'));
+            }
+            if ($data->has('nom')) {
+                $piece->setNom($data->getString('nom'));
+            }
+            if ($data->has('idUtilisateur')) {
+                $piece->setUtilisateur($uRepository->find($data->getInt('idUtilisateur')));
+            }
+
+            $em->persist($piece);
+            $em->flush();
+        }
+
+        return $this->json(['message' => 'Piece modifié'], 200);
     }
 
     #[Route('/piece/{piece<\d*>}/delete', name: '_delete_piece', methods: ['DELETE'])]
-    public function deletePiece(): JsonResponse
+    #[OA\RequestBody(
+        required: false,
+        description: 'Pour supprimer une pièce',
+        content: new OA\JsonContent(
+            type: 'object',
+            properties: [
+                new OA\Property(property: 'piece', type: 'integer'),
+            ]
+        )
+    )]
+    #[OA\Response(
+        response: 204,
+        description: 'Piece supprimée avec succès',
+    )]
+    #[OA\Response(
+        response: 404,
+        description: 'Piece non trouvée',
+        content: new OA\JsonContent(
+            type: 'object',
+            properties: [
+                new OA\Property(property: 'error', type: 'string'),
+            ]
+        )
+    )]
+    public function deletePiece(Piece $piece, EntityManagerInterface $em): JsonResponse
     {
-        return $this->json([]);
+        $em->remove($piece);
+        $em->flush();
+        return $this->json([], 204);
     }
 
     #[Route('/login', name: '_login', methods: ['POST'])]
+    #[OA\RequestBody(
+        required: true,
+        description: 'Pour se connecter',
+        content: new OA\JsonContent(
+            type: 'object',
+            properties: [
+                new OA\Property(property: 'email', type: 'string'),
+                new OA\Property(property: 'password', type: 'string'),
+            ]
+        )
+    )]
+    #[OA\Response(
+        response: 404,
+        description: 'Utilisateur non trouvé',
+        content: new OA\JsonContent(
+            type: 'object',
+            properties: [
+                new OA\Property(property: 'err', type: 'string'),
+            ]
+        )
+    )]
+    #[OA\Response(
+        response: 406,
+        description: 'Manque de l\'email ou password',
+        content: new OA\JsonContent(
+            type: 'object',
+            properties: [
+                new OA\Property(property: 'err', type: 'string'),
+            ]
+        )
+    )]
     public function login(
         Request $request,
         UtilisateurRepository $uRepository,
@@ -189,6 +311,47 @@ final class ApiController extends AbstractController
     }
 
     #[Route('/register/user', name: '_register_user', methods: ['POST'])]
+    #[OA\RequestBody(
+        required: true,
+        description: 'Pour crée un utilisateur',
+        content: new OA\JsonContent(
+            type: 'object',
+            properties: [
+                new OA\Property(property: 'email', type: 'string'),
+                new OA\Property(property: 'password', type: 'string'),
+            ]
+        )
+    )]
+    #[OA\Response(
+        response: 201,
+        description: 'Utilisateur créé avec succès',
+        content: new OA\JsonContent(
+            type: 'object',
+            properties: [
+                new OA\Property(property: 'message', type: 'string'),
+            ]
+        )
+    )]
+    #[OA\Response(
+        response: 406,
+        description: 'Manque de l\'email ou password',
+        content: new OA\JsonContent(
+            type: 'object',
+            properties: [
+                new OA\Property(property: 'err', type: 'string'),
+            ]
+        )
+    )]
+    #[OA\Response(
+        response: 409,
+        description: 'Il existe déjà un utilisateur avec cet email',
+        content: new OA\JsonContent(
+            type: 'object',
+            properties: [
+                new OA\Property(property: 'err', type: 'string'),
+            ]
+        )
+    )]
     public function makeUser(
         Request $request,
         UtilisateurRepository $uRepository,
@@ -226,8 +389,73 @@ final class ApiController extends AbstractController
     }
 
     #[Route('/piece/create', name: '_add_piece', methods: ['POST'])]
-    public function creePiece(Request $request, PieceRepository $pRepository, EntityManagerInterface $em): JsonResponse
+    #[OA\RequestBody(
+        required: true,
+        description: 'Le body contient les informations de la pièce à créer',
+        content: new OA\JsonContent(
+            type: 'object',
+            properties: [
+                new OA\Property(property: 'description', type: 'string'),
+                new OA\Property(property: 'nom', type: 'string'),
+                new OA\Property(property: 'idUtilisateur', type: 'integer'),
+            ]
+        )
+    )]
+    #[OA\Response(
+        response: 201,
+        description: 'Piece créée avec succès',
+        content: new OA\JsonContent(
+            type: 'object',
+            properties: [
+                new OA\Property(property: 'message', type: 'string'),
+            ]
+        )
+    )]
+    #[OA\Response(
+        response: 406,
+        description: 'Manque de données requises',
+        content: new OA\JsonContent(
+            type: 'object',
+            properties: [
+                new OA\Property(property: 'err', type: 'string'),
+            ]
+        )
+    )]
+    public function creePiece(
+        Request $request,
+        PieceRepository $pRepository,
+        UtilisateurRepository $uRepository,
+        EntityManagerInterface $em
+    ): JsonResponse {
+        $data = new ParameterBag($this->serializer->decode($request->getContent(), 'json'));
+        $piece = new Piece();
+        if ($data->has('description') && !empty($data->getString('description'))) {
+            $piece->setDescription($data->getString('description'));
+        }
+        if ($data->has('nom') && !empty($data->getString('nom'))) {
+            $piece->setNom($data->getString('nom'));
+        }
+        if ($data->has('idUtilisateur') && !empty($data->getInt('idUtilisateur'))) {
+            $piece->setUtilisateur($uRepository->find($data->getInt('idUtilisateur')));
+        }
+
+        $em->persist($piece);
+        $em->flush();
+
+        return $this->json(['message' => 'Piece crée'], 201);
+    }
+
+    #[Route('/piece/{piece<\d*>}', name: '_get_piece', methods: ['GET'])]
+    public function getPiece(Piece $piece): JsonResponse
     {
-        return $this->json([]);
+        return $this->json($this->serializer->normalize($piece, 'json', [
+            AbstractNormalizer::ATTRIBUTES => [
+                'id',
+                'nom',
+                'prenom',
+                'description',
+                'capteur',
+            ],
+        ]));
     }
 }
