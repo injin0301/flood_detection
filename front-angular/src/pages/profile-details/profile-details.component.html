@@ -1,0 +1,44 @@
+<div class="user-profile-container absolute">
+    <div class="absolute inset-0 justify-center">
+       <div class="bg-shape1 bg-teal opacity-50 bg-blur"></div>
+       <div class="bg-shape2 bg-primary opacity-50 bg-blur"></div>
+       <div class="bg-shape1 bg-purple opacity-50 bg-blur"></div>
+    </div>
+   
+    <div class="profile-details">
+        <h2>Update profile</h2>
+
+        <div class="details-box-left">
+                <p-floatlabel variant="on">
+                    <input pInputText id="on_label" [(ngModel)]="value1" autocomplete="off" />
+                    <label for="on_label">First name :</label>
+                </p-floatlabel>
+
+                <p-floatlabel variant="on">
+                    <input pInputText id="on_label" [(ngModel)]="value2" autocomplete="off" />
+                    <label for="on_label">Last name :</label>
+                </p-floatlabel> 
+
+                <p-floatlabel variant="on">
+                    <input pInputText id="on_label" [(ngModel)]="value3" autocomplete="off" />
+                    <label for="on_label">Tel :</label>
+                </p-floatlabel> 
+
+                <p-floatlabel variant="on">
+                    <input pInputText id="on_label" [(ngModel)]="value4" autocomplete="off" />
+                    <label for="on_label">Address :</label>
+                </p-floatlabel> 
+
+                <div class="">
+                    <p-fileUpload mode="basic" accept="image/*" name="myfile[]" chooseLabel="Select Image"></p-fileUpload>
+                </div>
+        </div>
+
+        <div class="flex gap-4 mt-1 btns">
+            <p-button label="Cancel" class="w-full btn" [outlined]="true" styleClass="w-full" />
+            <p-button label="Save" class="w-full btn" styleClass="w-full" />
+        </div>
+        
+    </div>
+    
+</div>
