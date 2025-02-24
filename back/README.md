@@ -64,3 +64,24 @@ docker compose exec -itu 1000 app bin/console doctrine:migrations:migrate
 ```bash
 docker compose down
 ```
+
+## Documentation de l'API
+
+Pour accéder à la documentation de l'API, ouvrez votre navigateur et allez à l'adresse suivante :
+
+```
+http://localhost/api/doc
+```
+
+### Utilisation de Swagger
+
+Swagger est utilisé pour générer et afficher la documentation de l'API. Il permet de tester les différentes routes de l'API directement depuis l'interface utilisateur.
+
+- **Accéder à Swagger** : Rendez-vous sur `http://localhost/api/doc` pour voir la documentation interactive.
+- **Tester les endpoints** : Utilisez l'interface Swagger pour envoyer des requêtes aux différents endpoints de l'API et voir les réponses en temps réel.
+
+Swagger facilite la compréhension et l'utilisation de l'API en fournissant une interface utilisateur conviviale pour explorer et tester les fonctionnalités disponibles.
+
+### Autorisation
+
+Il est nécessaire d'avoir l'autorisation pour utiliser les API, sauf pour se connecter et créer un compte.
