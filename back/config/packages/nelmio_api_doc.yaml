@@ -1,9 +1,15 @@
 nelmio_api_doc:
   documentation:
     info:
-      title: 'Hello API Platform'
+      title: 'Flood Detection API'
       description: ''
       version: '1.0.0'
+    components:
+      securitySchemes:
+        BearerAuth:
+          type: http
+          scheme: bearer
+          bearerFormat: JWT
   areas:
     path_patterns:
       - ^/api

@@ -1,6 +1,6 @@
 openapi: 3.0.0
 info:
-  title: 'Hello API Platform'
+  title: 'Flood Detection API'
   description: ''
   version: 1.0.0
 paths:
@@ -85,6 +85,9 @@ paths:
                 properties:
                   error: { type: string }
                 type: object
+      security:
+        -
+          BearerAuth: []
   /api/all/piece:
     get:
       operationId: get_app_api_all_piece
@@ -115,6 +118,9 @@ paths:
                 properties:
                   error: { type: string }
                 type: object
+      security:
+        -
+          BearerAuth: []
   '/api/piece/{piece}/update':
     put:
       operationId: put_app_api_update_piece
@@ -157,6 +163,9 @@ paths:
                 properties:
                   err: { type: string }
                 type: object
+      security:
+        -
+          BearerAuth: []
     patch:
       operationId: patch_app_api_update_piece
       parameters:
@@ -198,6 +207,9 @@ paths:
                 properties:
                   err: { type: string }
                 type: object
+      security:
+        -
+          BearerAuth: []
   '/api/piece/{piece}/delete':
     delete:
       operationId: delete_app_api_delete_piece
@@ -230,6 +242,9 @@ paths:
                 properties:
                   error: { type: string }
                 type: object
+      security:
+        -
+          BearerAuth: []
   /api/register/user:
     post:
       operationId: post_app_api_register_user
@@ -304,6 +319,26 @@ paths:
                 properties:
                   err: { type: string }
                 type: object
+      security:
+        -
+          BearerAuth: []
+  '/api/piece/{piece}':
+    get:
+      operationId: get_app_api_get_piece
+      parameters:
+        -
+          name: piece
+          in: path
+          required: true
+          schema:
+            type: string
+            pattern: '\d*'
+      responses:
+        default:
+          description: ''
+      security:
+        -
+          BearerAuth: []
   /api/csrf-token/:
     get:
       operationId: get_generate_token_init
@@ -316,6 +351,9 @@ paths:
                 properties:
                   csrf_token: { type: string }
                 type: object
+      security:
+        -
+          BearerAuth: []
   /api/csrf-token/protected-action:
     post:
       operationId: post_generate_token_protected-action
@@ -346,6 +384,9 @@ paths:
                 properties:
                   error: { type: string }
                 type: object
+      security:
+        -
+          BearerAuth: []
 components:
   schemas:
     Utilisateur:
@@ -430,6 +471,9 @@ components:
         temperature:
           type: number
           format: float
+        inondation:
+          type: boolean
+          nullable: true
         piece:
           nullable: true
           oneOf:
@@ -440,6 +484,10 @@ components:
           format: float
       type: object
   securitySchemes:
+    BearerAuth:
+      type: http
+      bearerFormat: JWT
+      scheme: bearer
     JWT:
       type: http
       bearerFormat: JWT

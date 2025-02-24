@@ -3,8 +3,6 @@
 namespace App\Entity;
 
 use App\Repository\CapteurRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: CapteurRepository::class)]
@@ -23,6 +21,9 @@ class Capteur
 
     #[ORM\Column]
     private ?float $niveau_eau = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?bool $inondation = null;
 
     #[ORM\ManyToOne(inversedBy: 'capteur')]
     private ?Piece $piece = null;
@@ -80,6 +81,18 @@ class Capteur
     public function setPiece(?Piece $piece): static
     {
         $this->piece = $piece;
+
+        return $this;
+    }
+
+    public function isInondation(): ?bool
+    {
+        return $this->inondation;
+    }
+
+    public function setInondation(?bool $inondation): static
+    {
+        $this->inondation = $inondation;
 
         return $this;
     }
