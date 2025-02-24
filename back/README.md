@@ -54,7 +54,7 @@ docker compose up -d
 1. Exécutez la migration vers une nouvelle instance de fichier SQL :
 
 ```bash
-docker compose exec -itu 1000 app bin/console doctrine:migrations:migrate
+docker compose exec -itu 1000 app php bin/console doctrine:migrations:migrate
 ```
 
 ## Utilisation
