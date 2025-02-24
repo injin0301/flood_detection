@@ -1,0 +1,452 @@
+openapi: 3.0.0
+info:
+  title: 'Hello API Platform'
+  description: ''
+  version: 1.0.0
+paths:
+  /api/login:
+    post:
+      tags:
+        - 'Login Check'
+      summary: 'Creates a user token.'
+      description: 'Creates a user token.'
+      operationId: login_check_post
+      requestBody:
+        description: 'The login data'
+        required: true
+        content:
+          application/json:
+            schema:
+              required:
+                - email
+                - password
+              properties:
+                email:
+                  type: string
+                  nullable: false
+                password:
+                  type: string
+                  nullable: false
+              type: object
+      responses:
+        '200':
+          description: 'User token created'
+          content:
+            application/json:
+              schema:
+                required:
+                  - token
+                properties:
+                  token: { type: string, readOnly: true, nullable: false }
+                type: object
+        '404':
+          description: 'Utilisateur non trouvé'
+          content:
+            application/json:
+              schema:
+                properties:
+                  err: { type: string }
+                type: object
+        '406':
+          description: "Manque de l'email ou password"
+          content:
+            application/json:
+              schema:
+                properties:
+                  err: { type: string }
+                type: object
+  /api/all/utilisateurs:
+    get:
+      operationId: get_app_api_all_utilisateur
+      requestBody:
+        description: 'Le body contien le CSRF Token'
+        required: false
+        content:
+          application/json:
+            schema:
+              properties:
+                csrf_token:
+                  type: string
+              type: object
+      responses:
+        '200':
+          description: 'Liste de tout les Utilisateur'
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Utilisateur'
+        '403':
+          description: "Le CSRF Token n'est pas valide"
+          content:
+            application/json:
+              schema:
+                properties:
+                  error: { type: string }
+                type: object
+  /api/all/piece:
+    get:
+      operationId: get_app_api_all_piece
+      requestBody:
+        description: 'Le body contien le CSRF Token'
+        required: false
+        content:
+          application/json:
+            schema:
+              properties:
+                csrf_token:
+                  type: string
+              type: object
+      responses:
+        '200':
+          description: 'Liste de toute les Piece'
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Piece'
+        '403':
+          description: "Le CSRF Token n'est pas valide"
+          content:
+            application/json:
+              schema:
+                properties:
+                  error: { type: string }
+                type: object
+  '/api/piece/{piece}/update':
+    put:
+      operationId: put_app_api_update_piece
+      parameters:
+        -
+          name: piece
+          in: path
+          required: true
+          schema:
+            type: string
+            pattern: '\d*'
+      requestBody:
+        description: "les informations de la pièce à mettre à jour pour PATCH, ce n'est pas obligatoire de tout mettre"
+        required: true
+        content:
+          application/json:
+            schema:
+              properties:
+                description:
+                  type: string
+                nom:
+                  type: string
+                idUtilisateur:
+                  type: integer
+              type: object
+      responses:
+        '200':
+          description: 'Piece modifié avec succès'
+          content:
+            application/json:
+              schema:
+                properties:
+                  message: { type: string }
+                type: object
+        '406':
+          description: 'Manque de données requises'
+          content:
+            application/json:
+              schema:
+                properties:
+                  err: { type: string }
+                type: object
+    patch:
+      operationId: patch_app_api_update_piece
+      parameters:
+        -
+          name: piece
+          in: path
+          required: true
+          schema:
+            type: string
+            pattern: '\d*'
+      requestBody:
+        description: "les informations de la pièce à mettre à jour pour PATCH, ce n'est pas obligatoire de tout mettre"
+        required: true
+        content:
+          application/json:
+            schema:
+              properties:
+                description:
+                  type: string
+                nom:
+                  type: string
+                idUtilisateur:
+                  type: integer
+              type: object
+      responses:
+        '200':
+          description: 'Piece modifié avec succès'
+          content:
+            application/json:
+              schema:
+                properties:
+                  message: { type: string }
+                type: object
+        '406':
+          description: 'Manque de données requises'
+          content:
+            application/json:
+              schema:
+                properties:
+                  err: { type: string }
+                type: object
+  '/api/piece/{piece}/delete':
+    delete:
+      operationId: delete_app_api_delete_piece
+      parameters:
+        -
+          name: piece
+          in: path
+          required: true
+          schema:
+            type: string
+            pattern: '\d*'
+      requestBody:
+        description: 'Pour supprimer une pièce'
+        required: false
+        content:
+          application/json:
+            schema:
+              properties:
+                piece:
+                  type: integer
+              type: object
+      responses:
+        '204':
+          description: 'Piece supprimée avec succès'
+        '404':
+          description: 'Piece non trouvée'
+          content:
+            application/json:
+              schema:
+                properties:
+                  error: { type: string }
+                type: object
+  /api/register/user:
+    post:
+      operationId: post_app_api_register_user
+      requestBody:
+        description: 'Pour crée un utilisateur'
+        required: true
+        content:
+          application/json:
+            schema:
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+              type: object
+      responses:
+        '201':
+          description: 'Utilisateur créé avec succès'
+          content:
+            application/json:
+              schema:
+                properties:
+                  message: { type: string }
+                type: object
+        '406':
+          description: "Manque de l'email ou password"
+          content:
+            application/json:
+              schema:
+                properties:
+                  err: { type: string }
+                type: object
+        '409':
+          description: 'Il existe déjà un utilisateur avec cet email'
+          content:
+            application/json:
+              schema:
+                properties:
+                  err: { type: string }
+                type: object
+  /api/piece/create:
+    post:
+      operationId: post_app_api_add_piece
+      requestBody:
+        description: 'Le body contient les informations de la pièce à créer'
+        required: true
+        content:
+          application/json:
+            schema:
+              properties:
+                description:
+                  type: string
+                nom:
+                  type: string
+                idUtilisateur:
+                  type: integer
+              type: object
+      responses:
+        '201':
+          description: 'Piece créée avec succès'
+          content:
+            application/json:
+              schema:
+                properties:
+                  message: { type: string }
+                type: object
+        '406':
+          description: 'Manque de données requises'
+          content:
+            application/json:
+              schema:
+                properties:
+                  err: { type: string }
+                type: object
+  /api/csrf-token/:
+    get:
+      operationId: get_generate_token_init
+      responses:
+        '200':
+          description: 'Route Pour générer le CSRF Token'
+          content:
+            application/json:
+              schema:
+                properties:
+                  csrf_token: { type: string }
+                type: object
+  /api/csrf-token/protected-action:
+    post:
+      operationId: post_generate_token_protected-action
+      requestBody:
+        description: 'Le body doit contenir le CSRF Token'
+        required: true
+        content:
+          application/json:
+            schema:
+              properties:
+                csrf_token:
+                  type: string
+              type: object
+      responses:
+        '200':
+          description: 'Permet de validé le CSRF Token'
+          content:
+            application/json:
+              schema:
+                properties:
+                  message: { type: string }
+                type: object
+        '403':
+          description: "Le CSRF Token n'est pas valide"
+          content:
+            application/json:
+              schema:
+                properties:
+                  error: { type: string }
+                type: object
+components:
+  schemas:
+    Utilisateur:
+      required:
+        - id
+        - email
+        - password
+        - nom
+        - prenom
+        - city
+        - zipCode
+        - piece
+        - userIdentifier
+      properties:
+        id:
+          type: integer
+        email:
+          type: string
+        roles:
+          title: 'The user roles'
+          type: array
+          items:
+            type: string
+          default: []
+        password:
+          title: 'The hashed password'
+          type: string
+        nom:
+          type: string
+        prenom:
+          type: string
+        tel:
+          type: integer
+          nullable: true
+        city:
+          type: string
+        zipCode:
+          type: string
+        piece:
+          type: array
+          items:
+            $ref: '#/components/schemas/Piece'
+        userIdentifier:
+          title: 'A visual identifier that represents this user.'
+          type: string
+      type: object
+    Piece:
+      required:
+        - id
+        - nom
+        - description
+        - capteur
+      properties:
+        id:
+          type: integer
+        nom:
+          type: string
+        description:
+          type: string
+        utilisateur:
+          nullable: true
+          oneOf:
+            -
+              $ref: '#/components/schemas/Utilisateur'
+        capteur:
+          type: array
+          items:
+            $ref: '#/components/schemas/Capteur'
+      type: object
+    Capteur:
+      required:
+        - id
+        - humidite
+        - temperature
+        - niveauEau
+      properties:
+        id:
+          type: integer
+        humidite:
+          type: number
+          format: float
+        temperature:
+          type: number
+          format: float
+        piece:
+          nullable: true
+          oneOf:
+            -
+              $ref: '#/components/schemas/Piece'
+        niveauEau:
+          type: number
+          format: float
+      type: object
+  securitySchemes:
+    JWT:
+      type: http
+      bearerFormat: JWT
+      scheme: bearer
+security: []
+tags:
+  -
+    name: 'Login Check'
+    description: 'Login Check'
+

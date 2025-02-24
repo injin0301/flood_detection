@@ -1,4 +1,4 @@
-FROM php:8.1-apache
+FROM php:8.2.27-apache-bookworm
 
 COPY --chown=root:root symfony.conf /etc/apache2/sites-available/symfony.conf
 

@@ -7,18 +7,42 @@
         "php": ">=8.2",
         "ext-ctype": "*",
         "ext-iconv": "*",
+        "api-platform/doctrine-orm": "^4.0",
+        "api-platform/symfony": "^4.0",
+        "doctrine/dbal": "^3.9.4",
+        "doctrine/doctrine-bundle": "^2.13.2",
+        "doctrine/doctrine-migrations-bundle": "^3.4.1",
+        "doctrine/orm": "^3.3.2",
+        "lexik/jwt-authentication-bundle": "^3.1",
+        "nelmio/api-doc-bundle": "^4.36.1",
+        "nelmio/cors-bundle": "^2.5",
+        "phpdocumentor/reflection-docblock": "^5.6.1",
+        "phpstan/phpdoc-parser": "^1.33",
+        "phpstan/phpstan-doctrine": "^2.0.1",
+        "phpstan/phpstan-symfony": "^2.0.2",
+        "symfony/asset": "7.2.*",
         "symfony/console": "7.2.*",
         "symfony/dotenv": "7.2.*",
-        "symfony/flex": "^2",
+        "symfony/expression-language": "7.2.*",
+        "symfony/flex": "^2.4.7",
         "symfony/framework-bundle": "7.2.*",
+        "symfony/http-kernel": "7.2.*",
+        "symfony/password-hasher": "7.2.*",
+        "symfony/property-access": "7.2.*",
+        "symfony/property-info": "7.2.*",
         "symfony/runtime": "7.2.*",
-        "symfony/yaml": "7.2.*"
-    },
-    "require-dev": {
+        "symfony/security-bundle": "7.2.*",
+        "symfony/security-csrf": "7.2.*",
+        "symfony/serializer": "7.2.*",
+        "symfony/twig-bundle": "7.2.*",
+        "symfony/validator": "7.2.*",
+        "symfony/yaml": "7.2.*",
+        "zircote/swagger-php": "^5.0.3"
     },
     "config": {
         "allow-plugins": {
             "php-http/discovery": true,
+            "phpstan/extension-installer": true,
             "symfony/flex": true,
             "symfony/runtime": true
         },
@@ -65,5 +89,13 @@
             "allow-contrib": false,
             "require": "7.2.*"
         }
+    },
+    "require-dev": {
+        "symfony/maker-bundle": "^1.62.1",
+        "friendsofphp/php-cs-fixer": "^3.68.5",
+        "phpstan/extension-installer": "^1.4.3",
+        "phpstan/phpstan": "^2.1.2",
+        "phpunit/phpunit": "^9.6.22",
+        "squizlabs/php_codesniffer": "^3.11.3"
     }
 }

@@ -8,16 +8,15 @@ services:
       - "/etc/localtime:/etc/localtime:ro"
     ports:
       - $APP_PORT:80
-      - 8000:8000 # port pour le HTTPS fait par symfony
     networks:
       - app
   
   bdd:
     image: postgres:15.8-bookworm
     environment:
-      POSTGRES_DB: gsmn
-      POSTGRES_USER: gsmn
-      POSTGRES_PASSWORD: gsmn
+      POSTGRES_DB: flood_detection
+      POSTGRES_USER: flood_detection
+      POSTGRES_PASSWORD: flood_detection
     ports:
       - $BDD_PORT:5432
     volumes:
