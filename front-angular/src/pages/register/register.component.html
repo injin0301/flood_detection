@@ -1,1 +1,32 @@
-<p>register works!</p>
+<div class="register-page">
+    <div class="form-container">
+      <h3>Inscription</h3>
+      <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+        <label for="username">Nom d'utilisateur</label>
+        <input id="username" type="text" formControlName="username" placeholder="Votre nom d'utilisateur" />
+  
+        <label for="email">Email</label>
+        <input id="email" type="email" formControlName="email" placeholder="Votre email" />
+  
+        <label for="password">Mot de passe</label>
+        <input id="password" type="password" formControlName="password" placeholder="Votre mot de passe" />
+  
+        <label for="confirmPassword">Confirmer le mot de passe</label>
+        <input id="confirmPassword" type="password" formControlName="confirmPassword" placeholder="Confirmez votre mot de passe" />
+  
+        <!-- Message d'erreur si les mots de passe ne correspondent pas -->
+        <div *ngIf="registerForm.errors?.['mismatch']" class="error">
+            Les mots de passe ne correspondent pas.
+        </div>
+        <!-- Message d'erreur général -->
+        <div *ngIf="errorMessage" class="error">
+          {{ errorMessage }}
+        </div>
+  
+        <button type="submit" [disabled]="registerForm.invalid">
+          S'inscrire
+        </button>
+      </form>
+    </div>
+  </div>
+  

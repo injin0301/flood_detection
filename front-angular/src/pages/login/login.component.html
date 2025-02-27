@@ -1,15 +1,42 @@
-<form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
-    <div>
+<div class="login-page">
+  <!-- Colonne de gauche (visuel / texte) -->
+  <div class="left-side">
+    <h1>Allons-y!</h1>
+    <h2>ICI MESSAGE EN DUR</h2>
+    <p>
+      ICI MESSAGE EN DUR
+    </p>
+  </div>
+
+  <!-- Colonne de droite (formulaire de connexion) -->
+  <div class="right-side">
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+      <h3>Connexion</h3>
+
       <label for="username">Nom d'utilisateur</label>
-      <input id="username" type="text" formControlName="username" placeholder="Votre nom d'utilisateur">
-    </div>
-    <div>
+      <input
+        id="username"
+        type="text"
+        formControlName="username"
+        placeholder="Votre nom d'utilisateur"
+      />
+
       <label for="password">Mot de passe</label>
-      <input id="password" type="password" formControlName="password" placeholder="Votre mot de passe">
-    </div>
-    <div *ngIf="errorMessage" class="error">
-      {{ errorMessage }}
-    </div>
-    <button type="submit" [disabled]="loginForm.invalid">Se connecter</button>
-  </form>
-  
+      <input
+        id="password"
+        type="password"
+        formControlName="password"
+        placeholder="Votre mot de passe"
+      />
+
+      <!-- Zone d'erreur si les identifiants sont invalides -->
+      <div *ngIf="errorMessage" class="error">
+        {{ errorMessage }}
+      </div>
+
+      <button type="submit" [disabled]="loginForm.invalid">
+        Se connecter
+      </button>
+    </form>
+  </div>
+</div>
