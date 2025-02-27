@@ -18,6 +18,7 @@ body:
     id: description
     attributes:
       label: Description
+      description: "Décrivez le problème rencontré" # Ajouté pour éviter que la description soit vide
     validations:
       required: true
   - type: dropdown
