@@ -19,7 +19,7 @@ body:
     attributes:
       label: Description
     validations:
-      required: true
+    required: true
   - type: dropdown
     id: type_code
     attributes:
