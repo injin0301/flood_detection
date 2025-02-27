@@ -18,7 +18,6 @@ body:
     id: description
     attributes:
       label: Description
-    validations:
     required: true
   - type: dropdown
     id: type_code
