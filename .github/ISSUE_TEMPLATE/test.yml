@@ -2,24 +2,29 @@ name: Swagger Api
 title: "[Swagger]: "
 labels: []
 body:
-  - type: markdown
-    attributes:
-      value: |
-        Thanks for taking the time to fill out this bug report!
   - type: input
-    id: nombre
+    id: titre
     attributes:
-      label: Numéro pour le point du ticket 
-      description: "Numéro du ticket"
-      placeholder: "0,2,3"
+      label: Titre
+      description: "Titre du ticket"
+      placeholder: "Entrez le titre du ticket"
     validations:
       required: true
   - type: textarea
     id: description
     attributes:
       label: Description
-      description: "Décrivez le problème rencontré" # Ajouté pour éviter que la description soit vide
-      placeholder: "Décrivez ici le problème..." # Add a placeholder to prevent empty field issues
+      description: "Décrivez le problème rencontré"
+      placeholder: "Décrivez ici le problème..."
+    validations:
+      required: true
+  - type: input
+    id: nombre
+    attributes:
+      label: Nombre
+      description: "Nombre que consomme le ticket"
+      placeholder: "Entrez un nombre"
+      render: number
     validations:
       required: true
   - type: dropdown
