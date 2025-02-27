@@ -1,5 +1,5 @@
-name: Siwgger Api
-title: "[Siwgger]: "
+name: Swagger Api
+title: "[Swagger]: "
 labels: []
 body:
   - type: markdown
@@ -9,9 +9,9 @@ body:
   - type: input
     id: nombre
     attributes:
-      label: Numero pour le poit du ticket 
+      label: Numéro pour le point du ticket 
       description: 
-      placeholder: 0,2,3
+      placeholder: "0,2,3"
     validations:
       required: true
   - type: textarea
@@ -23,18 +23,10 @@ body:
   - type: dropdown
     id: type_code
     attributes:
-      label: Fornt/Back
-      description: Choix a donnée entre le back et le front
+      label: Front/Back
+      description: Choix à donner entre le back et le front
       options:
         - Front
-        - back
+        - Back
     validations:
       required: true
-  - type: checkboxes
-    id: terms
-    attributes:
-      label: Code of Conduct
-      description: By submitting this issue, you agree to follow our [Code of Conduct](https://example.com). 
-      options:
-        - label: I agree to follow this project's Code of Conduct
-          required: true
