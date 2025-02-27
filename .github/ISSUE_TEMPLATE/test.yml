@@ -24,7 +24,7 @@ body:
     id: type_code
     attributes:
       label: Front/Back
-      description: Choix à donner entre le back et le front
+      description: "Choix à donner entre le back et le front"
       options:
         - Front
         - Back
