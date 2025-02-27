@@ -24,7 +24,6 @@ body:
       label: Nombre
       description: "Nombre que consomme le ticket"
       placeholder: "Entrez un nombre"
-      render: number
     validations:
       required: true
   - type: dropdown
