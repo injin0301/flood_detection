@@ -19,6 +19,7 @@ body:
     attributes:
       label: Description
       description: "Décrivez le problème rencontré" # Ajouté pour éviter que la description soit vide
+      placeholder: "Décrivez ici le problème..." # Add a placeholder to prevent empty field issues
     validations:
       required: true
   - type: dropdown
