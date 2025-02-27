@@ -10,7 +10,7 @@ body:
     id: nombre
     attributes:
       label: Numéro pour le point du ticket 
-      description: ''
+      description: "Numéro du ticket"
       placeholder: "0,2,3"
     validations:
       required: true
