@@ -359,7 +359,7 @@ paths:
       security:
         -
           BearerAuth: []
-  /api/register/utilisateur:
+  /api/enregistrer/utilisateur:
     post:
       tags:
         - 'Login Check'

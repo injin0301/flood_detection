@@ -30,6 +30,7 @@ use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Component\Serializer\Serializer;
 
 #[Route('/api', name: 'app_api')]
+#[OA\Tag(name: 'Login Check')]
 final class SecurityController extends AbstractController
 {
     private Serializer $serializer;
@@ -106,8 +107,7 @@ final class SecurityController extends AbstractController
         ]);
     }
 
-    #[Route('/register/utilisateur', name: '_register_user', methods: ['POST'])]
-    #[OA\Tag(name: 'Login Check')]
+    #[Route('/enregistrer/utilisateur', name: '_register_user', methods: ['POST'])]
     #[OA\RequestBody(
         required: true,
         description: 'Pour créer un utilisateur',

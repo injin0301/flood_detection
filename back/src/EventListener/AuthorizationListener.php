@@ -24,7 +24,7 @@ class AuthorizationListener
     {
         $request = $event->getRequest();
 
-        if ($request->getPathInfo() == '/api/login' || $request->getPathInfo() == '/api/register/user' || $request->getPathInfo() == '/api/doc') {
+        if (in_array($request->getPathInfo(), ['/api/login', '/api/register/user', '/api/doc'])) {
             return;
         }
 
