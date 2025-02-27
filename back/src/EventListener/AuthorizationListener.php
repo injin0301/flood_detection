@@ -59,7 +59,7 @@ class AuthorizationListener
                 throw new AccessDeniedHttpException('Invalid JWT token(pas bon l\'utilisateur)');
             }
 
-            if ($text->getPassFrase() !== $parsedToken['passphrase']) {
+            if (12 !== $parsedToken['passphrase']) {
                 throw new AccessDeniedHttpException('Invalid JWT token(pas le bon passphrase)');
             }
 

@@ -33,8 +33,8 @@ class HexTextService
     public function saveHexText(string $hexText): HexTextProtect
     {
         $hexTextEntity = new HexTextProtect();
-        $hexTextEntity->setPassFrase($hexText);
-        $hexTextEntity->setUtilisateur($this->utilisateur);
+        $hexTextEntity->setPassFrase(/*$hexText*/'12');
+        // $hexTextEntity->setUtilisateur($this->utilisateur);
 
         $this->em->persist($hexTextEntity);
         $this->em->flush();

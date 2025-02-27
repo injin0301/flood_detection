@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Piece;
 use App\Entity\Utilisateur;
+use App\Repository\HexTextProtectRepository;
 use App\Repository\PieceRepository;
 use App\Repository\UtilisateurRepository;
 use App\Service\HexTextService;
@@ -299,6 +300,7 @@ final class ApiController extends AbstractController
     public function login(
         Request $request,
         UtilisateurRepository $uRepository,
+        HexTextProtectRepository $htRepository,
         UserPasswordHasherInterface $passwordHasher,
         JWTTokenManagerInterface $jwtManager,
         HexTextService $hexTextService,
