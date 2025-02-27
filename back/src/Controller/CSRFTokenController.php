@@ -13,6 +13,7 @@ use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 
 #[Route('api/csrf-token', name: 'generate_token')]
 #[Security(name: 'BearerAuth')]
+#[OA\Tag(name: 'CSRF Token')]
 final class CSRFTokenController extends AbstractController
 {
     #[Route('/', name: '_init', methods: ['GET'])]

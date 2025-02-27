@@ -24,20 +24,18 @@ class AuthorizationListener
     {
         $request = $event->getRequest();
 
-        // var_dump($request->headers->all()); die;
-
         if ($request->getPathInfo() == '/api/login' || $request->getPathInfo() == '/api/register/user' || $request->getPathInfo() == '/api/doc') {
             return;
         }
 
         $authorizationHeader = $request->headers->get('Authorization');
         if (!$authorizationHeader) {
-            throw new AccessDeniedHttpException('*Authorization* header is missing');
+            throw new AccessDeniedHttpException('L\'en-tête *Authorization* est manquant');
         }
 
         // strpos($authorizationHeader, 'Bearer: ') !== 0 ||
         if (strpos($authorizationHeader, 'Bearer ') !== 0) {
-            throw new AccessDeniedHttpException('Invalid *Authorization* header format');
+            throw new AccessDeniedHttpException('Format de l\'en-tête *Authorization* invalide');
         }
 
         if (preg_match('/Bearer /', $authorizationHeader)) {
@@ -49,18 +47,18 @@ class AuthorizationListener
 
 
             if (empty($parsedToken)) {
-                throw new AccessDeniedHttpException('Invalid JWT token');
+                throw new AccessDeniedHttpException('Jeton JWT invalide');
             }
 
             $utilisateur = $this->uRepository->findOneBy(['email' => $parsedToken['username']]);
             $text = $this->hexTextProtectRepository->findOneBy(['utilisateur' => $utilisateur->getId()]);
 
             if (empty($text)) {
-                throw new AccessDeniedHttpException('Invalid JWT token(pas bon l\'utilisateur)');
+                throw new AccessDeniedHttpException('Jeton JWT invalide (utilisateur incorrect)');
             }
 
-            if (12 !== $parsedToken['passphrase']) {
-                throw new AccessDeniedHttpException('Invalid JWT token(pas le bon passphrase)');
+            if ($text->getPassFrase() !== $parsedToken['passphrase']) {
+                throw new AccessDeniedHttpException('Jeton JWT invalide (passphrase incorrect)');
             }
 
             // Ajouter les informations du token à la requête si nécessaire
