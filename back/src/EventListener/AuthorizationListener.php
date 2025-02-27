@@ -2,15 +2,18 @@
 
 namespace App\EventListener;
 
+use App\Repository\HexTextProtectRepository;
+use App\Repository\UtilisateurRepository;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
-use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 class AuthorizationListener
 {
     public function __construct(
         private JWTTokenManagerInterface $jwtManager,
+        private UtilisateurRepository $uRepository,
+        private HexTextProtectRepository $hexTextProtectRepository,
     ) {
     }
 
@@ -20,31 +23,50 @@ class AuthorizationListener
     public function onKernelRequest(RequestEvent $event): void
     {
         $request = $event->getRequest();
+
+        // var_dump($request->headers->all()); die;
+
+        if ($request->getPathInfo() == '/api/login' || $request->getPathInfo() == '/api/register/user' || $request->getPathInfo() == '/api/doc') {
+            return;
+        }
+
         $authorizationHeader = $request->headers->get('Authorization');
-        dd($request->headers->all());
         if (!$authorizationHeader) {
-            throw new AccessDeniedHttpException('Authorization header is missing');
+            throw new AccessDeniedHttpException('*Authorization* header is missing');
         }
 
+        // strpos($authorizationHeader, 'Bearer: ') !== 0 ||
         if (strpos($authorizationHeader, 'Bearer ') !== 0) {
-            throw new AccessDeniedHttpException('Invalid Authorization header format');
+            throw new AccessDeniedHttpException('Invalid *Authorization* header format');
         }
 
-        $token = substr($authorizationHeader, 7);
+        if (preg_match('/Bearer /', $authorizationHeader)) {
+            $token = substr($authorizationHeader, 7);
+        }
 
         try {
-            dd($token);
             $parsedToken = $this->jwtManager->parse($token);
-            $decodedToken = $this->jwtManager->decode($parsedToken);
 
-            if (!$decodedToken) {
+
+            if (empty($parsedToken)) {
                 throw new AccessDeniedHttpException('Invalid JWT token');
             }
 
+            $utilisateur = $this->uRepository->findOneBy(['email' => $parsedToken['username']]);
+            $text = $this->hexTextProtectRepository->findOneBy(['utilisateur' => $utilisateur->getId()]);
+
+            if (empty($text)) {
+                throw new AccessDeniedHttpException('Invalid JWT token(pas bon l\'utilisateur)');
+            }
+
+            if ($text->getPassFrase() !== $parsedToken['passphrase']) {
+                throw new AccessDeniedHttpException('Invalid JWT token(pas le bon passphrase)');
+            }
+
             // Ajouter les informations du token à la requête si nécessaire
-            $request->attributes->set('jwt_token', $decodedToken);
+            $request->attributes->set('jwt_token', $parsedToken);
         } catch (\Exception $e) {
-            throw new AccessDeniedHttpException('Invalid JWT token');
+            throw new AccessDeniedHttpException($e->getMessage());
         }
     }
 }

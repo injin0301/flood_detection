@@ -28,6 +28,6 @@ phpstan.neon
 /phpcs.xml
 ###< squizlabs/php_codesniffer ###
 
-###> lexik/jwt-authentication-bundle ###
-/config/jwt/*.pem
-###< lexik/jwt-authentication-bundle ###
+# ###> lexik/jwt-authentication-bundle ###
+# /config/jwt/*.pem
+# ###< lexik/jwt-authentication-bundle ###

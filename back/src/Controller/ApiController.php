@@ -6,9 +6,11 @@ use App\Entity\Piece;
 use App\Entity\Utilisateur;
 use App\Repository\PieceRepository;
 use App\Repository\UtilisateurRepository;
+use App\Service\HexTextService;
 use Doctrine\ORM\EntityManagerInterface;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
 use Nelmio\ApiDocBundle\Attribute\Model;
+use Nelmio\ApiDocBundle\Attribute\Security;
 use OpenApi\Attributes as OA;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -39,6 +41,7 @@ final class ApiController extends AbstractController
     }
 
     #[Route('/all/utilisateurs', name: '_all_utilisateur', methods: ['GET'])]
+    #[Security(name: 'BearerAuth')]
     #[OA\RequestBody(
         required: false,
         description: 'Le body contien le CSRF Token',
@@ -102,6 +105,7 @@ final class ApiController extends AbstractController
     }
 
     #[Route('/all/piece', name: '_all_piece', methods: ['GET'])]
+    #[Security(name: 'BearerAuth')]
     #[OA\RequestBody(
         required: false,
         description: 'Le body contien le CSRF Token',
@@ -157,6 +161,7 @@ final class ApiController extends AbstractController
     }
 
     #[Route('/piece/{piece<\d*>}/update', name: '_update_piece', methods: ['PUT', 'PATCH'])]
+    #[Security(name: 'BearerAuth')]
     #[OA\RequestBody(
         required: true,
         description: 'les informations de la pièce à mettre à jour pour PATCH, ce n\'est pas obligatoire de tout mettre',
@@ -227,6 +232,7 @@ final class ApiController extends AbstractController
     }
 
     #[Route('/piece/{piece<\d*>}/delete', name: '_delete_piece', methods: ['DELETE'])]
+    #[Security(name: 'BearerAuth')]
     #[OA\RequestBody(
         required: false,
         description: 'Pour supprimer une pièce',
@@ -295,8 +301,9 @@ final class ApiController extends AbstractController
         UtilisateurRepository $uRepository,
         UserPasswordHasherInterface $passwordHasher,
         JWTTokenManagerInterface $jwtManager,
+        HexTextService $hexTextService,
     ): JsonResponse {
-        $data = $request->request; // application/x-www-form-urlencoded
+        $data = new ParameterBag($this->serializer->decode($request->getContent(), 'json'));
         if (!$data->has('email') || !$data->has('password')) {
             return $this->json(['err' => 'Manque de l\'email ou password'], 406);
         }
@@ -306,8 +313,18 @@ final class ApiController extends AbstractController
         if (empty($verif) || !$passwordHasher->isPasswordValid($verif, $data->getString('password'))) {
             return $this->json(['err' => 'Utilisateur non trouvé'], 404);
         }
+        $hexTextService->setUtilisateur($verif);
+        $hexText = $hexTextService->generateHexText();
+        $hexTextEntity = $hexTextService->saveHexText($hexText);
 
-        return $this->json(['token' => $jwtManager->create($verif)]);
+        return $this->json([
+            'token' => $jwtManager->createFromPayload(
+                $verif,
+                [
+                    'passphrase' => $hexTextEntity->getPassFrase()
+                ]
+            )
+        ]);
     }
 
     #[Route('/register/user', name: '_register_user', methods: ['POST'])]
@@ -358,7 +375,7 @@ final class ApiController extends AbstractController
         EntityManagerInterface $em,
         UserPasswordHasherInterface $passwordHasher,
     ): JsonResponse {
-        $data = $request->request; // application/x-www-form-urlencoded
+        $data = new ParameterBag($this->serializer->decode($request->getContent(), 'json'));
 
         if (!$data->has(key: 'email') || !$data->has('password')) {
             return $this->json(['err' => 'Manque de l\'email ou password'], 406);
@@ -389,6 +406,7 @@ final class ApiController extends AbstractController
     }
 
     #[Route('/piece/create', name: '_add_piece', methods: ['POST'])]
+    #[Security(name: 'BearerAuth')]
     #[OA\RequestBody(
         required: true,
         description: 'Le body contient les informations de la pièce à créer',
@@ -446,6 +464,7 @@ final class ApiController extends AbstractController
     }
 
     #[Route('/piece/{piece<\d*>}', name: '_get_piece', methods: ['GET'])]
+    #[Security(name: 'BearerAuth')]
     public function getPiece(Piece $piece): JsonResponse
     {
         return $this->json($this->serializer->normalize($piece, 'json', [
