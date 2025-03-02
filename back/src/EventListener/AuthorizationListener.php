@@ -92,16 +92,16 @@ class AuthorizationListener
 
         $data = $response->toArray();
         foreach ($pieces as $piece) {
-            foreach ($data as $value) {
-                foreach (['day1', 'day2', 'day3', 'day4', 'day5', 'day6', 'day7'] as $day) {
-                    $capteur = new Capteur();
-                    $capteur->setHumidite($value[$day]['humidity']);
-                    $capteur->setTemperature($value[$day]['temperature_max']);
-                    $capteur->setNiveauEau($value[$day]['icon']);
-                    $capteur->setInondation($value[$day]['icon'] > 10);
-                    $this->em->persist($capteur);
-                    $piece->addCapteur($capteur);
-                }
+            foreach (['day1', 'day2', 'day3', 'day4', 'day5', 'day6', 'day7'] as $day) {
+                $capteur = new Capteur();
+                $capteur->setHumidite($data[$day]['humidity']);
+                $capteur->setTemperature($data[$day]['temperature_max']);
+                $capteur->setNiveauEau($data[$day]['icon']);
+                $capteur->setInondation($data[$day]['icon'] > 20 && $data[$day]['humidity'] > 80);
+                $this->em->persist($capteur);
+                $piece->addCapteur($capteur);
+                $this->em->persist($piece);
+                $this->em->flush();
             }
         }
     }

@@ -80,15 +80,14 @@ final class ApiController extends AbstractController
         /*if (!$csrfTokenManager->isTokenValid(new CsrfToken('api_token', $csrfToken))) {
             return $this->json(['error' => 'Invalid CSRF Token'], 403);
         }*/
-
         return $this->json([
             'piece' => $this->serializer->normalize($pRepository->findAll(), 'json', [
                 AbstractNormalizer::ATTRIBUTES => [
                     'id',
                     'nom',
-                    'prenom',
                     'description',
-                    'capteur',
+                    'utilisateur' => ['id', 'nom', 'prenom'],
+                    'capteur' => ['id', 'humidite', 'temperature', 'niveauEau', 'inondation'],
                 ],
             ]),
         ]);
