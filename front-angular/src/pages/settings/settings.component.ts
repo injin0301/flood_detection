@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { TableModule } from 'primeng/table';
 import { HttpClientModule } from '@angular/common/http';
-import { User } from '../../models/users';
+import { User } from '../../models/user';
 import { ButtonModule } from 'primeng/button';
 import { PaginatorModule, PaginatorState } from 'primeng/paginator';
 
@@ -29,10 +29,7 @@ export class SettingsComponent implements OnInit {
 
   ngOnInit() {
     this.customers.push(
-      { name: 'John Doe', company: 'TechCorp', country : "aeaea", representative : "zaezeazeza" },
-      { name: 'John Doe', company: 'TechCorp', country : "aeaea", representative : "zaezeazeza" },
-      { name: 'John Doe', company: 'TechCorp', country : "aeaea", representative : "zaezeazeza" },
-      { name: 'John Doe', company: 'TechCorp', country : "aeaea", representative : "zaezeazeza" }
+      { nom: 'John Doe', prenom: 'TechCorp', email : "aeaea" }
     )
       //this.customerService.getCustomersLarge().then((customers: Customer[]) => (this.customers = customers));
   }
