@@ -26,7 +26,7 @@ class HexTextProtect
 
     public function getPassFrase(): ?string
     {
-        return $this->passPhrase;
+        return '12'; //$this->passPhrase;
     }
 
     public function setPassFrase(string $passPhrase): static

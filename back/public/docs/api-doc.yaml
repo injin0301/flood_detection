@@ -48,51 +48,20 @@ paths:
                   err: { type: string }
                 type: object
         '406':
-          description: "Manque de l'email ou password"
+          description: "Manque de l'email ou du mot de passe"
           content:
             application/json:
               schema:
                 properties:
                   err: { type: string }
                 type: object
-  /api/all/utilisateurs:
+  /api/toutes/pieces:
     get:
-      operationId: get_app_api_all_utilisateur
-      requestBody:
-        description: 'Le body contien le CSRF Token'
-        required: false
-        content:
-          application/json:
-            schema:
-              properties:
-                csrf_token:
-                  type: string
-              type: object
-      responses:
-        '200':
-          description: 'Liste de tout les Utilisateur'
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Utilisateur'
-        '403':
-          description: "Le CSRF Token n'est pas valide"
-          content:
-            application/json:
-              schema:
-                properties:
-                  error: { type: string }
-                type: object
-      security:
-        -
-          BearerAuth: []
-  /api/all/piece:
-    get:
+      tags:
+        - Pieces
       operationId: get_app_api_all_piece
       requestBody:
-        description: 'Le body contien le CSRF Token'
+        description: 'Le body peut contenir le CSRF Token'
         required: false
         content:
           application/json:
@@ -103,7 +72,7 @@ paths:
               type: object
       responses:
         '200':
-          description: 'Liste de toute les Piece'
+          description: 'Liste de toutes les Pièces'
           content:
             application/json:
               schema:
@@ -121,9 +90,11 @@ paths:
       security:
         -
           BearerAuth: []
-  '/api/piece/{piece}/update':
+  '/api/piece/{piece}/put':
     put:
-      operationId: put_app_api_update_piece
+      tags:
+        - Pieces
+      operationId: put_app_api_update_piece_put
       parameters:
         -
           name: piece
@@ -133,7 +104,7 @@ paths:
             type: string
             pattern: '\d*'
       requestBody:
-        description: "les informations de la pièce à mettre à jour pour PATCH, ce n'est pas obligatoire de tout mettre"
+        description: 'Les informations de la pièce à mettre à jour pour PUT'
         required: true
         content:
           application/json:
@@ -148,7 +119,7 @@ paths:
               type: object
       responses:
         '200':
-          description: 'Piece modifié avec succès'
+          description: 'Pièce modifiée avec succès'
           content:
             application/json:
               schema:
@@ -166,8 +137,11 @@ paths:
       security:
         -
           BearerAuth: []
+  '/api/piece/{piece}/patch':
     patch:
-      operationId: patch_app_api_update_piece
+      tags:
+        - Pieces
+      operationId: patch_app_api_update_piece_path
       parameters:
         -
           name: piece
@@ -177,8 +151,8 @@ paths:
             type: string
             pattern: '\d*'
       requestBody:
-        description: "les informations de la pièce à mettre à jour pour PATCH, ce n'est pas obligatoire de tout mettre"
-        required: true
+        description: "Les informations de la pièce à mettre à jour pour PATCH.\n            Ce n'est pas obligatoire de tout mettre"
+        required: false
         content:
           application/json:
             schema:
@@ -192,7 +166,7 @@ paths:
               type: object
       responses:
         '200':
-          description: 'Piece modifié avec succès'
+          description: 'Pièce modifiée avec succès'
           content:
             application/json:
               schema:
@@ -210,8 +184,10 @@ paths:
       security:
         -
           BearerAuth: []
-  '/api/piece/{piece}/delete':
+  '/api/piece/{piece}/suppression':
     delete:
+      tags:
+        - Pieces
       operationId: delete_app_api_delete_piece
       parameters:
         -
@@ -233,9 +209,9 @@ paths:
               type: object
       responses:
         '204':
-          description: 'Piece supprimée avec succès'
+          description: 'Pièce supprimée avec succès'
         '404':
-          description: 'Piece non trouvée'
+          description: 'Pièce non trouvée'
           content:
             application/json:
               schema:
@@ -245,48 +221,10 @@ paths:
       security:
         -
           BearerAuth: []
-  /api/register/user:
+  /api/piece/ajout:
     post:
-      operationId: post_app_api_register_user
-      requestBody:
-        description: 'Pour crée un utilisateur'
-        required: true
-        content:
-          application/json:
-            schema:
-              properties:
-                email:
-                  type: string
-                password:
-                  type: string
-              type: object
-      responses:
-        '201':
-          description: 'Utilisateur créé avec succès'
-          content:
-            application/json:
-              schema:
-                properties:
-                  message: { type: string }
-                type: object
-        '406':
-          description: "Manque de l'email ou password"
-          content:
-            application/json:
-              schema:
-                properties:
-                  err: { type: string }
-                type: object
-        '409':
-          description: 'Il existe déjà un utilisateur avec cet email'
-          content:
-            application/json:
-              schema:
-                properties:
-                  err: { type: string }
-                type: object
-  /api/piece/create:
-    post:
+      tags:
+        - Pieces
       operationId: post_app_api_add_piece
       requestBody:
         description: 'Le body contient les informations de la pièce à créer'
@@ -304,7 +242,7 @@ paths:
               type: object
       responses:
         '201':
-          description: 'Piece créée avec succès'
+          description: 'Pièce créée avec succès'
           content:
             application/json:
               schema:
@@ -324,6 +262,8 @@ paths:
           BearerAuth: []
   '/api/piece/{piece}':
     get:
+      tags:
+        - Pieces
       operationId: get_app_api_get_piece
       parameters:
         -
@@ -333,14 +273,44 @@ paths:
           schema:
             type: string
             pattern: '\d*'
+      requestBody:
+        description: 'Le body peut contenir le CSRF Token'
+        required: false
+        content:
+          application/json:
+            schema:
+              properties:
+                csrf_token:
+                  type: string
+              type: object
       responses:
-        default:
-          description: ''
+        '200':
+          description: 'Détails de la pièce'
+          content:
+            application/json:
+              schema:
+                properties:
+                  id: { type: integer }
+                  nom: { type: string }
+                  prenom: { type: string }
+                  description: { type: string }
+                  capteur: { properties: { id: { type: integer }, humidite: { type: number, format: float }, temperature: { type: number, format: float }, niveau_eau: { type: number, format: float }, inondation: { type: boolean } }, type: object }
+                type: object
+        '404':
+          description: 'Pièce non trouvée'
+          content:
+            application/json:
+              schema:
+                properties:
+                  error: { type: string }
+                type: object
       security:
         -
           BearerAuth: []
   /api/csrf-token/:
     get:
+      tags:
+        - 'CSRF Token'
       operationId: get_generate_token_init
       responses:
         '200':
@@ -356,6 +326,8 @@ paths:
           BearerAuth: []
   /api/csrf-token/protected-action:
     post:
+      tags:
+        - 'CSRF Token'
       operationId: post_generate_token_protected-action
       requestBody:
         description: 'Le body doit contenir le CSRF Token'
@@ -387,8 +359,169 @@ paths:
       security:
         -
           BearerAuth: []
+  /api/enregistrer/utilisateur:
+    post:
+      tags:
+        - 'Login Check'
+      operationId: post_app_api_register_user
+      requestBody:
+        description: 'Pour créer un utilisateur'
+        required: true
+        content:
+          application/json:
+            schema:
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+              type: object
+      responses:
+        '201':
+          description: 'Utilisateur créé avec succès'
+          content:
+            application/json:
+              schema:
+                properties:
+                  message: { type: string }
+                type: object
+        '406':
+          description: "Manque de l'email ou du mot de passe"
+          content:
+            application/json:
+              schema:
+                properties:
+                  err: { type: string }
+                type: object
+        '409':
+          description: 'Il existe déjà un utilisateur avec cet email'
+          content:
+            application/json:
+              schema:
+                properties:
+                  err: { type: string }
+                type: object
+  /api/tous/utilisateurs:
+    get:
+      tags:
+        - Utilisateur
+      operationId: get_app_api_tous_utilisateur
+      requestBody:
+        description: 'Le body peut contenir le CSRF Token'
+        required: false
+        content:
+          application/json:
+            schema:
+              properties:
+                csrf_token:
+                  type: string
+              type: object
+      responses:
+        '200':
+          description: 'Liste de tous les Utilisateurs'
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Utilisateur'
+        '403':
+          description: "Le CSRF Token n'est pas valide"
+          content:
+            application/json:
+              schema:
+                properties:
+                  error: { type: string }
+                type: object
+      security:
+        -
+          BearerAuth: []
+  '/api/utilisateur/{utilisateur}':
+    put:
+      tags:
+        - Utilisateur
+      operationId: put_app_api_utilisateur_put
+      parameters:
+        -
+          name: utilisateur
+          in: path
+          required: true
+          schema:
+            type: string
+            pattern: '\d*'
+      requestBody:
+        description: "Les informations de l'utilisateur à mettre à jour"
+        required: true
+        content:
+          application/json:
+            schema:
+              properties:
+                email:
+                  type: string
+                roles:
+                  type: array
+                  items: { type: string }
+                password:
+                  type: string
+                nom:
+                  type: string
+                prenom:
+                  type: string
+                tel:
+                  type: string
+                city:
+                  type: string
+                zipCode:
+                  type: integer
+                piece:
+                  properties: { id: { type: integer } }
+                  type: object
+              type: object
+      responses:
+        '201':
+          description: 'Utilisateur modifié'
+          content:
+            application/json:
+              schema:
+                properties:
+                  message: { type: string }
+                type: object
+        '406':
+          description: 'Erreur de validation des données'
+          content:
+            application/json:
+              schema:
+                properties:
+                  err: { type: string }
+                type: object
+      security:
+        -
+          BearerAuth: []
 components:
   schemas:
+    Piece:
+      required:
+        - id
+        - nom
+        - description
+        - capteur
+      properties:
+        id:
+          type: integer
+        nom:
+          type: string
+        description:
+          type: string
+        utilisateur:
+          nullable: true
+          oneOf:
+            -
+              $ref: '#/components/schemas/Utilisateur'
+        capteur:
+          type: array
+          items:
+            $ref: '#/components/schemas/Capteur'
+      type: object
     Utilisateur:
       required:
         - id
@@ -433,29 +566,6 @@ components:
           title: 'A visual identifier that represents this user.'
           type: string
       type: object
-    Piece:
-      required:
-        - id
-        - nom
-        - description
-        - capteur
-      properties:
-        id:
-          type: integer
-        nom:
-          type: string
-        description:
-          type: string
-        utilisateur:
-          nullable: true
-          oneOf:
-            -
-              $ref: '#/components/schemas/Utilisateur'
-        capteur:
-          type: array
-          items:
-            $ref: '#/components/schemas/Capteur'
-      type: object
     Capteur:
       required:
         - id
@@ -495,6 +605,11 @@ components:
 security: []
 tags:
   -
+    name: Pieces
+  -
+    name: 'CSRF Token'
+  -
     name: 'Login Check'
-    description: 'Login Check'
+  -
+    name: Utilisateur
 
