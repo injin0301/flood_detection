@@ -6,6 +6,7 @@ use App\Entity\Piece;
 use App\Repository\PieceRepository;
 use App\Repository\UtilisateurRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\Persistence\ManagerRegistry;
 use Nelmio\ApiDocBundle\Attribute\Model;
 use Nelmio\ApiDocBundle\Attribute\Security;
 use OpenApi\Attributes as OA;
@@ -40,16 +41,6 @@ final class ApiController extends AbstractController
     }
 
     #[Route('/toutes/pieces', name: '_all_piece', methods: ['GET'])]
-    #[OA\RequestBody(
-        required: false,
-        description: 'Le body peut contenir le CSRF Token',
-        content: new OA\JsonContent(
-            type: 'object',
-            properties: [
-                new OA\Property(property: 'csrf_token', type: 'string'),
-            ]
-        )
-    )]
     #[OA\Response(
         response: 200,
         description: 'Liste de toutes les Pièces',
@@ -73,13 +64,7 @@ final class ApiController extends AbstractController
         PieceRepository $pRepository,
         CsrfTokenManagerInterface $csrfTokenManager,
     ): JsonResponse {
-        $data = json_decode($request->getContent(), true);
 
-        $csrfToken = $data['csrf_token'] ?? '';
-
-        /*if (!$csrfTokenManager->isTokenValid(new CsrfToken('api_token', $csrfToken))) {
-            return $this->json(['error' => 'Invalid CSRF Token'], 403);
-        }*/
         return $this->json([
             'piece' => $this->serializer->normalize($pRepository->findAll(), 'json', [
                 AbstractNormalizer::ATTRIBUTES => [
@@ -188,7 +173,7 @@ final class ApiController extends AbstractController
         Piece $piece,
         Request $request,
         EntityManagerInterface $em,
-        UtilisateurRepository $uRepository
+        UtilisateurRepository $uRepository,
     ): JsonResponse {
         $data = new ParameterBag($this->serializer->decode($request->getContent(), 'json'));
 
@@ -198,7 +183,7 @@ final class ApiController extends AbstractController
         if ($data->has('nom')) {
             $piece->setNom($data->getString('nom'));
         }
-        if ($data->has('idUtilisateur')) {
+        if ($data->has('idUtilisateur') && (!empty($uRepository->find($data->getInt('idUtilisateur'))) || $uRepository->find($data->getInt('idUtilisateur')) != null)) {
             $piece->setUtilisateur($uRepository->find($data->getInt('idUtilisateur')));
         }
 
@@ -209,16 +194,6 @@ final class ApiController extends AbstractController
     }
 
     #[Route('/piece/{piece<\d*>}/suppression', name: '_delete_piece', methods: ['DELETE'])]
-    #[OA\RequestBody(
-        required: false,
-        description: 'Pour supprimer une pièce',
-        content: new OA\JsonContent(
-            type: 'object',
-            properties: [
-                new OA\Property(property: 'piece', type: 'integer'),
-            ]
-        )
-    )]
     #[OA\Response(
         response: 204,
         description: 'Pièce supprimée avec succès',
@@ -237,6 +212,7 @@ final class ApiController extends AbstractController
     {
         $em->remove($piece);
         $em->flush();
+
         return $this->json([], 204);
     }
 
@@ -298,16 +274,6 @@ final class ApiController extends AbstractController
     }
 
     #[Route('/piece/{piece<\d*>}', name: '_get_piece', methods: ['GET'])]
-    #[OA\RequestBody(
-        required: false,
-        description: 'Le body peut contenir le CSRF Token',
-        content: new OA\JsonContent(
-            type: 'object',
-            properties: [
-                new OA\Property(property: 'csrf_token', type: 'string'),
-            ]
-        )
-    )]
     #[OA\Response(
         response: 200,
         description: 'Détails de la pièce',
@@ -348,9 +314,9 @@ final class ApiController extends AbstractController
             AbstractNormalizer::ATTRIBUTES => [
                 'id',
                 'nom',
-                'prenom',
                 'description',
-                'capteur',
+                'utilisateur' => ['id', 'nom', 'prenom'],
+                'capteur' => ['id', 'humidite', 'temperature', 'niveauEau', 'inondation'],
             ],
         ]));
     }

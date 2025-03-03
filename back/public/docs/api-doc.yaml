@@ -60,16 +60,6 @@ paths:
       tags:
         - Pieces
       operationId: get_app_api_all_piece
-      requestBody:
-        description: 'Le body peut contenir le CSRF Token'
-        required: false
-        content:
-          application/json:
-            schema:
-              properties:
-                csrf_token:
-                  type: string
-              type: object
       responses:
         '200':
           description: 'Liste de toutes les Pièces'
@@ -197,16 +187,6 @@ paths:
           schema:
             type: string
             pattern: '\d*'
-      requestBody:
-        description: 'Pour supprimer une pièce'
-        required: false
-        content:
-          application/json:
-            schema:
-              properties:
-                piece:
-                  type: integer
-              type: object
       responses:
         '204':
           description: 'Pièce supprimée avec succès'
@@ -273,16 +253,6 @@ paths:
           schema:
             type: string
             pattern: '\d*'
-      requestBody:
-        description: 'Le body peut contenir le CSRF Token'
-        required: false
-        content:
-          application/json:
-            schema:
-              properties:
-                csrf_token:
-                  type: string
-              type: object
       responses:
         '200':
           description: 'Détails de la pièce'
@@ -406,16 +376,6 @@ paths:
       tags:
         - Utilisateur
       operationId: get_app_api_tous_utilisateur
-      requestBody:
-        description: 'Le body peut contenir le CSRF Token'
-        required: false
-        content:
-          application/json:
-            schema:
-              properties:
-                csrf_token:
-                  type: string
-              type: object
       responses:
         '200':
           description: 'Liste de tous les Utilisateurs'

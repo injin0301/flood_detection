@@ -45,16 +45,6 @@ final class UtilisateurController extends AbstractController
     }
 
     #[Route('/tous/utilisateurs', name: '_tous_utilisateur', methods: ['GET'])]
-    #[OA\RequestBody(
-        required: false,
-        description: 'Le body peut contenir le CSRF Token',
-        content: new OA\JsonContent(
-            type: 'object',
-            properties: [
-                new OA\Property(property: 'csrf_token', type: 'string'),
-            ]
-        )
-    )]
     #[OA\Response(
         response: 200,
         description: 'Liste de tous les Utilisateurs',
@@ -78,13 +68,6 @@ final class UtilisateurController extends AbstractController
         UtilisateurRepository $uRepository,
         CsrfTokenManagerInterface $csrfTokenManager,
     ): JsonResponse {
-        $data = json_decode($request->getContent(), true);
-
-        $csrfToken = $data['csrf_token'] ?? '';
-
-        /*if (!$csrfTokenManager->isTokenValid(new CsrfToken('api_token', $csrfToken))) {
-            return $this->json(['error' => 'Invalid CSRF Token'], 403);
-        }*/
 
         return $this->json([
             'utilisateur' => $this->serializer->normalize($uRepository->findAll(), 'json', [
