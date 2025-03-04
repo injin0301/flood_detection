@@ -6,15 +6,15 @@ use App\Entity\Piece;
 use App\Repository\PieceRepository;
 use App\Repository\UtilisateurRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\ORM\Exception\ORMException;
 use Nelmio\ApiDocBundle\Attribute\Model;
 use Nelmio\ApiDocBundle\Attribute\Security;
 use OpenApi\Attributes as OA;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\ParameterBag;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 use Symfony\Component\Serializer\Encoder\CsvEncoder;
@@ -64,7 +64,6 @@ final class ApiController extends AbstractController
         PieceRepository $pRepository,
         CsrfTokenManagerInterface $csrfTokenManager,
     ): JsonResponse {
-
         return $this->json([
             'piece' => $this->serializer->normalize($pRepository->findAll(), 'json', [
                 AbstractNormalizer::ATTRIBUTES => [
@@ -115,7 +114,7 @@ final class ApiController extends AbstractController
         Piece $piece,
         Request $request,
         EntityManagerInterface $em,
-        UtilisateurRepository $uRepository
+        UtilisateurRepository $uRepository,
     ): Response {
         $data = new ParameterBag($this->serializer->decode($request->getContent(), 'json'));
 
@@ -133,7 +132,6 @@ final class ApiController extends AbstractController
 
         return $this->json(['message' => 'Piece modifié'], 200);
     }
-
 
     #[Route('/piece/{piece<\d*>}/patch', name: '_update_piece_path', methods: ['PATCH'])]
     #[OA\RequestBody(
@@ -183,7 +181,7 @@ final class ApiController extends AbstractController
         if ($data->has('nom')) {
             $piece->setNom($data->getString('nom'));
         }
-        if ($data->has('idUtilisateur') && (!empty($uRepository->find($data->getInt('idUtilisateur'))) || $uRepository->find($data->getInt('idUtilisateur')) != null)) {
+        if ($data->has('idUtilisateur') && (!empty($uRepository->find($data->getInt('idUtilisateur'))) || null != $uRepository->find($data->getInt('idUtilisateur')))) {
             $piece->setUtilisateur($uRepository->find($data->getInt('idUtilisateur')));
         }
 
@@ -210,8 +208,18 @@ final class ApiController extends AbstractController
     )]
     public function deletePiece(Piece $piece, EntityManagerInterface $em): JsonResponse
     {
-        $em->remove($piece);
-        $em->flush();
+        try {
+            foreach ($piece->getCapteur()->toArray() as $p) {
+                $piece->removeCapteur($p);
+            }
+
+            $em->remove($piece);
+            $em->flush();
+        } catch (ORMException $orm) {
+            return $this->json(['err' => $orm->getMessage()], 500);
+        } catch (\Exception $e) {
+            return $this->json(['err' => $e->getMessage()], 500);
+        }
 
         return $this->json([], 204);
     }
@@ -253,7 +261,7 @@ final class ApiController extends AbstractController
         Request $request,
         PieceRepository $pRepository,
         UtilisateurRepository $uRepository,
-        EntityManagerInterface $em
+        EntityManagerInterface $em,
     ): JsonResponse {
         $data = new ParameterBag($this->serializer->decode($request->getContent(), 'json'));
         $piece = new Piece();

@@ -7,7 +7,6 @@ use App\Repository\HexTextProtectRepository;
 use App\Repository\PieceRepository;
 use App\Repository\UtilisateurRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\Mapping\Entity;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
@@ -21,18 +20,15 @@ class AuthorizationListener
         private PieceRepository $pRepository,
         private EntityManagerInterface $em,
         private HexTextProtectRepository $hexTextProtectRepository,
-        private HttpClientInterface $client
+        private HttpClientInterface $client,
     ) {
     }
 
-    /**
-     * @return void
-     */
     public function onKernelRequest(RequestEvent $event): void
     {
         $request = $event->getRequest();
 
-        if (in_array($request->getPathInfo(), ['/api/login', '/api/register/user', '/api/doc'])) {
+        if (in_array($request->getPathInfo(), ['/api/login', '/api/enregistrer/utilisateur', '/api/doc'])) {
             return;
         }
 
@@ -44,7 +40,7 @@ class AuthorizationListener
         }
 
         // strpos($authorizationHeader, 'Bearer: ') !== 0 ||
-        if (strpos($authorizationHeader, 'Bearer ') !== 0) {
+        if (0 !== strpos($authorizationHeader, 'Bearer ')) {
             throw new AccessDeniedHttpException('Format de l\'en-tête *Authorization* invalide');
         }
 
@@ -54,7 +50,6 @@ class AuthorizationListener
 
         try {
             $parsedToken = $this->jwtManager->parse($token);
-
 
             if (empty($parsedToken)) {
                 throw new AccessDeniedHttpException('Jeton JWT invalide');
@@ -86,7 +81,7 @@ class AuthorizationListener
         }
 
         $response = $this->client->request('GET', 'https://api.tutiempo.net/json/?lan=fr&apid=zwDX4azaz4X4Xqs&ll=40.4178,-3.7022');
-        if ($response->getStatusCode() !== 200) {
+        if (200 !== $response->getStatusCode()) {
             return;
         }
 
