@@ -20,7 +20,7 @@ APP_DIR=path/dir/project
 APP_PORT=80
 
 # BDD_DIR=/var/docker/gsmn-bdd
-BDD_DIR=chemin/vers/le/dossier/de/la/base/de/donner
+BDD_DIR=chemin/vers/le/dossier/de/la/base/de/données
 BDD_PORT=5432
 ```
 
