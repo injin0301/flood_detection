@@ -1,4 +1,4 @@
-<div class="user-profile-container absolute">
+<div *ngIf="!isLoading" class="user-profile-container absolute">
     <div class="profile-details">
         <h2>Update profile</h2>
 
@@ -14,25 +14,40 @@
                 </p-floatlabel> 
 
                 <p-floatlabel variant="on">
-                    <input pInputText id="on_label" [(ngModel)]="value3" autocomplete="off" />
+                    <input type="text" pInputText id="on_label" [(ngModel)]="value3" autocomplete="off" />
                     <label for="on_label">Tel :</label>
                 </p-floatlabel> 
 
                 <p-floatlabel variant="on">
                     <input pInputText id="on_label" [(ngModel)]="value4" autocomplete="off" />
-                    <label for="on_label">Address :</label>
+                    <label for="on_label">Address email :</label>
                 </p-floatlabel> 
 
-                <div class="">
-                    <p-fileUpload mode="basic" accept="image/*" name="myfile[]" chooseLabel="Select Image"></p-fileUpload>
-                </div>
+                <p-floatlabel variant="on">
+                    <input pInputText id="on_label" [(ngModel)]="value5" autocomplete="off" />
+                    <label for="on_label">Zip Code :</label>
+                </p-floatlabel> 
+
+                <p-floatlabel variant="on">
+                    <input pInputText id="on_label" [(ngModel)]="value6" autocomplete="off" />
+                    <label for="on_label">City :</label>
+                </p-floatlabel>
         </div>
 
-        <div class="flex gap-4 mt-1 btns">
-            <p-button label="Cancel" class="w-full btn" [outlined]="true" styleClass="w-full" />
-            <p-button label="Save" class="w-full btn" styleClass="w-full" />
+        <div  class="flex gap-4 mt-1" style="color: red; font-size: 1.5em;">
+            {{ errorMessage }}
+        </div>
+
+        <div class="flex gap-4 mt-1 btns" style="margin-top: 40px;">
+            <p-button label="Cancel" class="w-full btn" [outlined]="true" styleClass="w-full" (click)="back()" />
+            <p-button label="Save" class="w-full btn" styleClass="w-full" (click)="save()" />
         </div>
         
     </div>
     
+</div>
+
+<div *ngIf="isLoading" class="spinner-container">
+    <div class="spinner"></div>
+    <p>Chargement en cours...</p>
 </div>

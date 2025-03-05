@@ -11,50 +11,40 @@ import { ApiService } from '../../services/api.service';
 import { User } from '../../models/user';
 import { CommonModule } from '@angular/common';
 import { UserPut } from '../../models/userPut';
+import { Piece } from '../../models/piece';
+import { RoomPut } from '../../models/roomPut';
 
 @Component({
-  selector: 'app-profile-details',
+  selector: 'app-rooms-details',
   imports: [ButtonModule, FloatLabel, FormsModule, FileUploadModule, HttpClientModule, InputTextModule, CommonModule],
-  providers: [],
-  templateUrl: './profile-details.component.html',
-  styleUrl: './profile-details.component.scss',
-  standalone: true
+  templateUrl: './rooms-details.component.html',
+  styleUrl: './rooms-details.component.scss'
 })
-export class ProfileDetailsComponent implements OnInit {
-  userId: string | null = null;
+export class RoomsDetailsComponent implements OnInit {
+  roomId: string | null = null;
   isLoading = true;
-  user? : User;
+  room? : Piece;
   errorMessage : string = ""
 
   value1: string | undefined;
 
   value2: string | undefined;
 
-  value3: string | undefined;
-
-  value4: string | undefined;
-
-  value5: string | undefined;
-
-  value6: string | undefined;
-
   constructor(private route: ActivatedRoute, private apiService: ApiService, private router: Router) {}
 
   ngOnInit() {
-    this.userId = this.route.snapshot.paramMap.get('id'); // Récupérer l'ID
+    this.roomId = this.route.snapshot.paramMap.get('id'); // Récupérer l'ID
     
 
-    this.apiService.getUsers().subscribe({
+    this.apiService.getPiece(this.roomId).subscribe({
       next: (response) => {
         this.isLoading = false;
-        this.user = response.find(user => user.id == this.userId);
+        this.room = response;
 
-        this.value1 = this.user?.prenom;
-        this.value2 = this.user?.nom;
-        this.value3 = '0' + this.user?.tel;
-        this.value4 = this.user?.email;
-        this.value5 = this.user?.zipCode;
-        this.value6 = this.user?.city;
+        this.value1 = this.room?.nom
+        this.value2 = this.room?.description
+
+        console.log(this.room)
       },
       error: (error) => {
         console.error('Erreur lors de la récupération des données', error);
@@ -69,36 +59,23 @@ export class ProfileDetailsComponent implements OnInit {
   save() {
     this.errorMessage = "";
 
-    if(this.value3?.length != 10) {
-      this.errorMessage = "Phone number is wrong"
-      return;
-    }
-    
-    if(this.value5?.length != 5) {
-      this.errorMessage = "ZipCode is wrong"
-      return;
+    if(this.value1 == "") {
+      this.errorMessage = "Room name is necessary"
     }
 
-    let userPut : UserPut = {
-      "id" : this.user!.id,
-      "email": this.value4,
-      "password": "1234",
-      "roles": [
-            "ROLE_USER"
-        ],
-      "nom": this.value2,
-      "prenom": this.value1,
-      "tel": this.value3,
-      "city": this.value6,
-      "zipCode": parseInt(this.value5),
-      "piece": {
-        "id" : 0
-      }
+    if(this.value2 == "") {
+      this.errorMessage = "Description is necessary"
+    }
+
+    let roomPut : RoomPut = {
+      "idUtilisateur" : this.room!.utilisateur!.id,
+      "nom": this.value1,
+      "description": this.value2
     }
 
     this.isLoading = true;
 
-    this.apiService.updateUser(this.userId, userPut).subscribe({
+    this.apiService.updatePiece(this.roomId, roomPut).subscribe({
       next: (response) => {
         this.isLoading = false;
       },

@@ -24,9 +24,9 @@ export class SideBarComponent implements OnInit {
       label: 'Dashboard',
     },
     {
-      routeLink: 'user-profile',
-      icon: 'fal fa-user',
-      label: 'Profile',
+      routeLink: 'rooms',
+      icon: 'fa fa-thermometer-full',
+      label: 'Rooms',
     },
     {
       routeLink: 'settings',

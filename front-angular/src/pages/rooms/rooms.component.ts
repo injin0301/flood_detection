@@ -7,6 +7,7 @@ import { PaginatorModule, PaginatorState } from 'primeng/paginator';
 import { ApiService } from '../../services/api.service';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
+import { Piece } from '../../models/piece';
 
 interface PageEvent {
   length: number;     // Total number of items
@@ -16,28 +17,29 @@ interface PageEvent {
 }
 
 @Component({
-  selector: 'app-settings',
+  selector: 'app-rooms',
   imports: [TableModule, HttpClientModule, ButtonModule, PaginatorModule, CommonModule],
-  providers: [],
-  templateUrl: './settings.component.html',
-  styleUrl: './settings.component.scss',
-  standalone: true,
+  templateUrl: './rooms.component.html',
+  styleUrl: './rooms.component.scss'
 })
-export class SettingsComponent implements OnInit {
+export class RoomsComponent implements OnInit {
   isLoading = true;
-  customers: User [] = [];
+  rooms: Piece [] = [];
   first: number = 0;
   rows: number = 10;
 
   constructor(private apiService: ApiService, private router: Router) {}
 
   ngOnInit() {
-    this.apiService.getUsers().subscribe({
+    this.apiService.getPieces().subscribe({
       next: (response) => {
         this.isLoading = false;
-        response.forEach(user => {
-          this.customers.push(user);
+        response.forEach(room => {
+          if(room.utilisateur != null) {
+            this.rooms.push(room);
+          }  
         });
+        console.log(this.rooms)
       },
       error: (error) => {
         console.error('Erreur lors de la récupération des données', error);
@@ -54,7 +56,7 @@ export class SettingsComponent implements OnInit {
     // Now use `pageEvent` safely
   }
 
-  editUser(customerId: User) {
-    this.router.navigate(['/user-profile-details', customerId]);
+  editRoom(roomId: Piece) {
+    this.router.navigate(['/room-details', roomId]);
   }
 }
