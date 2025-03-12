@@ -13,14 +13,14 @@
     <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
       <h3>Connexion</h3>
 
-      <label for="username">Nom d'utilisateur</label>
+      <label for="email">Email</label>
       <input
-        id="username"
-        type="text"
-        formControlName="username"
-        placeholder="Votre nom d'utilisateur"
+        id="email"
+        type="email"
+        formControlName="email"
+        placeholder="Votre adresse email"
       />
-
+      
       <label for="password">Mot de passe</label>
       <input
         id="password"

@@ -2,9 +2,6 @@
     <div class="form-container">
       <h3>Inscription</h3>
       <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
-        <label for="username">Nom d'utilisateur</label>
-        <input id="username" type="text" formControlName="username" placeholder="Votre nom d'utilisateur" />
-  
         <label for="email">Email</label>
         <input id="email" type="email" formControlName="email" placeholder="Votre email" />
   
