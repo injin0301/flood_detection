@@ -1,13 +1,8 @@
-/* style.scss */
-
-/* Import des polices */
+/* You can add global styles to this file, and also import other style files */
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
-
-/* PrimeIcons (optionnel, si vous les utilisez) */
 @import "primeicons/primeicons.css";
-
-/* Variables de couleurs globales */
+/* Code pour gerer l'affichage du front */
 :root {
   --color-primary: #ff679b;   /* Rose principal */
   --color-secondary: #fdf5f9; /* Rose très clair pour le fond */
@@ -15,17 +10,14 @@
   --color-light: #fff;
 }
 
-/* Reset basique */
 * {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-/* Style global du body */
-body {
-  position: relative;
-  font-family: "Poppins", sans-serif;
-  background: var(--color-secondary); /* Fond rose clair */
-  color: var(--color-dark);
-}
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  body {
+    position: relative;
+    font-family: "Poppins", sans-serif;
+    background: #f4f7fa;
+  }
