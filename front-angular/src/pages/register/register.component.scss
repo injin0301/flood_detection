@@ -1,68 +1,72 @@
 .register-page {
-    display: flex;
-    min-height: 100vh;
-    justify-content: center;
-    align-items: center;
-    background: var(--color-secondary); // Utilise la couleur définie globalement dans style.scss
-  
-    .form-container {
+  --color-primary: #ff679b;   /* Rose principal */
+  --color-secondary: #fdf5f9; /* Rose très clair pour le fond */
+  --color-dark: #333;
+  --color-light: #fff;
+
+  display: flex;
+  min-height: 100vh;
+  justify-content: center;
+  align-items: center;
+  background: var(--color-secondary); 
+
+  .form-container {
+    width: 100%;
+    max-width: 400px;
+    background: var(--color-light);
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+
+    h3 {
+      text-align: center;
+      color: var(--color-dark);
+      margin-bottom: 1.5rem;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 500;
+      color: var(--color-dark);
+    }
+
+    input {
       width: 100%;
-      max-width: 400px;
-      background: var(--color-light);
-      padding: 2rem;
-      border-radius: 8px;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-  
-      h3 {
-        text-align: center;
-        color: var(--color-dark);
-        margin-bottom: 1.5rem;
+      padding: 0.75rem;
+      margin-bottom: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+
+      &:focus {
+        border-color: var(--color-primary);
+        outline: none;
       }
-  
-      label {
-        display: block;
-        margin-bottom: 0.5rem;
-        font-weight: 500;
-        color: var(--color-dark);
+    }
+
+    .error {
+      color: red;
+      margin-bottom: 1rem;
+    }
+
+    button {
+      width: 100%;
+      padding: 0.75rem;
+      border: none;
+      border-radius: 4px;
+      background-color: var(--color-primary);
+      color: var(--color-light);
+      font-size: 1rem;
+      cursor: pointer;
+
+      &:hover {
+        background-color: #ff467f;
       }
-  
-      input {
-        width: 100%;
-        padding: 0.75rem;
-        margin-bottom: 1rem;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-  
-        &:focus {
-          border-color: var(--color-primary);
-          outline: none;
-        }
-      }
-  
-      .error {
-        color: red;
-        margin-bottom: 1rem;
-      }
-  
-      button {
-        width: 100%;
-        padding: 0.75rem;
-        border: none;
-        border-radius: 4px;
-        background-color: var(--color-primary);
-        color: var(--color-light);
-        font-size: 1rem;
-        cursor: pointer;
-  
-        &:hover {
-          background-color: #ff467f;
-        }
-  
-        &:disabled {
-          background-color: #ccc;
-          cursor: not-allowed;
-        }
+
+      &:disabled {
+        background-color: #ccc;
+        cursor: not-allowed;
       }
     }
   }
-  
+}

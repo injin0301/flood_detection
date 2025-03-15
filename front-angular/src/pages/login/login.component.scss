@@ -1,4 +1,9 @@
 .login-page {
+  --color-primary: #ff679b;   /* Rose principal */
+  --color-secondary: #fdf5f9; /* Rose très clair pour le fond */
+  --color-dark: #333;
+  --color-light: #fff;
+
   display: flex;
   min-height: 100vh;
 
@@ -8,8 +13,7 @@
     flex-direction: column;
     justify-content: center;
     padding: 2rem;
-
-    background: linear-gradient(135deg, #fdf5f9 30%, #ffdee8 100%);
+    background: linear-gradient(135deg, var(--color-secondary) 30%, #ffdee8 100%);
 
     h1 {
       font-size: 3rem;
@@ -50,14 +54,14 @@
         margin-bottom: 1.5rem;
         font-size: 1.5rem;
         text-align: center;
-        color: #333;
+        color: var(--color-dark);
       }
 
       label {
         display: block;
         margin-bottom: 0.5rem;
         font-weight: 500;
-        color: #333;
+        color: var(--color-dark);
       }
 
       input {
