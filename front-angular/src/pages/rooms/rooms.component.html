@@ -1,24 +1,24 @@
 <div class="box" *ngIf="!isLoading">
     <div class="users-list">
-        <h1>All User - List</h1>
-        <p-table [value]="customers" [scrollable]="true" scrollHeight="400px" [resizableColumns]="true" styleClass="p-datatable-gridlines" [tableStyle]="{'min-width': '50rem'}">
+        <h1>All Rooms - List</h1>
+        <p-table [value]="rooms" [scrollable]="true" scrollHeight="400px" [resizableColumns]="true" styleClass="p-datatable-gridlines" [tableStyle]="{'min-width': '50rem'}">
             <ng-template #header>
                 <tr>
                     <th pResizableColumn>Name</th>
-                    <th pResizableColumn>Surname</th>
-                    <th pResizableColumn>Email</th>
-                    <th pResizableColumn>Number of rooms</th>
+                    <th pResizableColumn>Description</th>
+                    <th pResizableColumn>User name</th>
+                    <th pResizableColumn>Captors numbers</th>
                     <th pResizableColumn>Actions</th>
                 </tr>
             </ng-template>
-            <ng-template #body let-customer>
+            <ng-template #body let-room>
                 <tr>
-                    <td>{{ customer.nom }}</td>
-                    <td>{{ customer.prenom }}</td>
-                    <td>{{ customer.email }}</td>
-                    <td>{{ customer.piece.length }}</td>
+                    <td>{{ room.nom }}</td>
+                    <td>{{ room.description }}</td>
+                    <td>{{ room.utilisateur?.nom }}</td>
+                    <td>{{ room.capteur.length }}</td>
                     <td>
-                        <p-button icon="pi pi-pencil" [rounded]="true" severity="success" [outlined]="true" (click)="editUser(customer.id)" />
+                        <p-button icon="pi pi-pencil" [rounded]="true" severity="success" [outlined]="true" (click)="editRoom(room.id)" />
                     </td>
                     
                 </tr>

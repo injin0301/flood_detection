@@ -50,6 +50,10 @@
     border-radius: 35% 65% 31% 69% / 57% 59% 41% 43%;
 }
 
+.container .drop:nth-child(4) {
+    border-radius: 35% 65% 31% 69% / 57% 59% 41% 43%;
+}
+
 .container .drop:hover {
     border-radius: 50%;
 }
@@ -119,4 +123,28 @@
     justify-content: center;
     align-items: center;
     flex-direction: column;
+    background: #eff0f4;
 }
+
+.spinner-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+  }
+  
+  .spinner {
+    width: 40px;
+    height: 40px;
+    border: 4px solid rgba(0, 0, 0, 0.1);
+    border-left-color: #000;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+  }
+  
+  @keyframes spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
