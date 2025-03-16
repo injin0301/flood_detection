@@ -87,24 +87,24 @@ final class SecurityController extends AbstractController
         if (!$data->has('email') || !$data->has('password')) {
             return $this->json(['err' => 'Manque de l\'email ou du mot de passe'], 406);
         }
-
         $verif = $uRepository->findOneBy(['email' => $data->get('email')]);
 
-        if (empty($verif) || !$passwordHasher->isPasswordValid($verif, $data->getString('password'))) {
+        $passwordValid = $passwordHasher->isPasswordValid($verif, $data->getString('password'));
+
+        if (!$passwordValid) {
             return $this->json(['err' => 'Utilisateur non trouvé'], 404);
         }
+
         $hexTextService->setUtilisateur($verif);
         $hexText = $hexTextService->generateHexText();
         $hexTextEntity = $hexTextService->saveHexText($hexText);
 
-        return $this->json([
-            'token' => $jwtManager->createFromPayload(
-                $verif,
-                [
-                    'passphrase' => $hexTextEntity->getPassFrase()
-                ]
-            )
-        ]);
+        $token = $jwtManager->createFromPayload(
+            $verif,
+            ['passphrase' => $hexTextEntity->getPassFrase()]
+        );
+
+        return $this->json(['token' => $token]);
     }
 
     #[Route('/enregistrer/utilisateur', name: '_register_user', methods: ['POST'])]
@@ -162,7 +162,6 @@ final class SecurityController extends AbstractController
         }
 
         $userEmail = $uRepository->findOneBy(['email' => $data->getString('email')]);
-
         if (!empty($userEmail)) {
             return $this->json(['err' => 'Il existe déjà un utilisateur avec cet email'], 409);
         }
@@ -182,6 +181,8 @@ final class SecurityController extends AbstractController
         $em->persist($user);
         $em->flush();
 
-        return $this->json(['message' => 'Utilisateur créé'], 201);
+        return $this->json([
+            'message' => 'Utilisateur créé'
+        ], 201);
     }
 }

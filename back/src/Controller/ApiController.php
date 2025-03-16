@@ -60,21 +60,16 @@ final class ApiController extends AbstractController
         )
     )]
     public function allPiece(
-        Request $request,
         PieceRepository $pRepository,
-        CsrfTokenManagerInterface $csrfTokenManager,
     ): JsonResponse {
-        return $this->json([
-            'piece' => $this->serializer->normalize($pRepository->findAll(), 'json', [
-                AbstractNormalizer::ATTRIBUTES => [
-                    'id',
-                    'nom',
-                    'description',
-                    'utilisateur' => ['id', 'nom', 'prenom'],
-                    'capteur' => ['id', 'humidite', 'temperature', 'niveauEau', 'inondation'],
-                ],
-            ]),
-        ]);
+        $pieces = $pRepository->createQueryBuilder('p')
+            ->select('p.id, p.nom, p.description, u.id AS utilisateur_id, u.nom AS utilisateur_nom, u.prenom AS utilisateur_prenom, c.id AS capteur_id, c.humidite, c.temperature, c.niveauEau, c.inondation')
+            ->leftJoin('p.utilisateur', 'u')
+            ->leftJoin('p.capteur', 'c')
+            ->getQuery()
+            ->getResult();
+
+        return $this->json(['piece' => $pieces]);
     }
 
     #[Route('/piece/{piece<\d*>}/put', name: '_update_piece_put', methods: ['PUT'])]
@@ -116,21 +111,24 @@ final class ApiController extends AbstractController
         EntityManagerInterface $em,
         UtilisateurRepository $uRepository,
     ): Response {
-        $data = new ParameterBag($this->serializer->decode($request->getContent(), 'json'));
+        $data = json_decode($request->getContent(), true);
 
-        foreach (['description', 'nom', 'idUtilisateur'] as $value) {
-            if (!$data->has($value)) {
-                return $this->json(['err' => "Manque de {$value}"], 406);
-            }
+        if (!isset($data['description'], $data['nom'], $data['idUtilisateur'])) {
+            return $this->json(['err' => 'Manque de données requises'], 406);
         }
-        $piece->setDescription($data->getString('description'));
-        $piece->setNom($data->getString('nom'));
-        $piece->setUtilisateur($uRepository->find($data->getInt('idUtilisateur')));
+
+        $piece->setDescription($data['description']);
+        $piece->setNom($data['nom']);
+        $utilisateur = $uRepository->find($data['idUtilisateur']);
+        if (!$utilisateur) {
+            return $this->json(['err' => 'Utilisateur non trouvé'], 404);
+        }
+        $piece->setUtilisateur($utilisateur);
 
         $em->persist($piece);
         $em->flush();
 
-        return $this->json(['message' => 'Piece modifié'], 200);
+        return $this->json(['message' => 'Piece modifiée'], 200);
     }
 
     #[Route('/piece/{piece<\d*>}/patch', name: '_update_piece_path', methods: ['PATCH'])]
