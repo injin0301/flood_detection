@@ -2,7 +2,6 @@ import { ApplicationConfig, provideZoneChangeDetection } from '@angular/core';
 import { provideRouter } from '@angular/router';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { providePrimeNG } from 'primeng/config';
-import { provideHttpClient } from '@angular/common/http';
 import Aura from '@primeng/themes/lara';
 import { definePreset } from '@primeng/themes';
 import { provideHttpClient } from '@angular/common/http';
