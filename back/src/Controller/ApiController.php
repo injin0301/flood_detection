@@ -62,14 +62,17 @@ final class ApiController extends AbstractController
     public function allPiece(
         PieceRepository $pRepository,
     ): JsonResponse {
-        $pieces = $pRepository->createQueryBuilder('p')
-            ->select('p.id, p.nom, p.description, u.id AS utilisateur_id, u.nom AS utilisateur_nom, u.prenom AS utilisateur_prenom, c.id AS capteur_id, c.humidite, c.temperature, c.niveauEau, c.inondation')
-            ->leftJoin('p.utilisateur', 'u')
-            ->leftJoin('p.capteur', 'c')
-            ->getQuery()
-            ->getResult();
-
-        return $this->json(['piece' => $pieces]);
+        return $this->json([
+            'piece' => $this->serializer->normalize($pRepository->findAll(), 'json', [
+                AbstractNormalizer::ATTRIBUTES => [
+                    'id',
+                    'nom',
+                    'description',
+                    'utilisateur' => ['id', 'nom', 'prenom'],
+                    'capteur' => ['id', 'humidite', 'temperature', 'niveauEau', 'inondation'],
+                ],
+            ]),
+        ]);
     }
 
     #[Route('/piece/{piece<\d*>}/put', name: '_update_piece_put', methods: ['PUT'])]
