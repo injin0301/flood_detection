@@ -17,7 +17,7 @@ export class ApiService {
 
   getPieces(): Observable<any[]> {
     const headers = new HttpHeaders({
-      'Authorization': `Bearer ${this.tokenMock}`, // Ajout du header d'authentification
+      'Authorization': `Bearer ${this.getToken()}`, // Ajout du header d'authentification
     });
 
     return this.http.get<any>(this.apiUrl + '/toutes/pieces', { headers }).pipe(
@@ -28,14 +28,14 @@ export class ApiService {
 
   getPiece(roomId: any): Observable<any> {
     const headers = new HttpHeaders({
-      'Authorization': `Bearer ${this.tokenMock}`, // Ajout du header d'authentification
+      'Authorization': `Bearer ${this.getToken()}`, // Ajout du header d'authentification
     });
     return this.http.get(this.apiUrl + '/piece/' + roomId, { headers });
   }
 
   getUsers(): Observable<any[]> {
     const headers = new HttpHeaders({
-      'Authorization': `Bearer ${this.tokenMock}`, // Ajout du header d'authentification
+      'Authorization': `Bearer ${this.getToken()}`, // Ajout du header d'authentification
     });
 
     return this.http.get<any>(this.apiUrl + '/tous/utilisateurs', { headers }).pipe(
@@ -46,15 +46,24 @@ export class ApiService {
 
   updateUser(userId: any, userData: any): Observable<any> {
     const headers = new HttpHeaders({
-      'Authorization': `Bearer ${this.tokenMock}`, // Ajout du header d'authentification
+      'Authorization': `Bearer ${this.getToken()}`, // Ajout du header d'authentification
     });
     return this.http.put(this.apiUrl + '/utilisateur/' + userId, userData, { headers });
   }
 
   updatePiece(roomId: any, roomData: any): Observable<any> {
     const headers = new HttpHeaders({
-      'Authorization': `Bearer ${this.tokenMock}`, // Ajout du header d'authentification
+      'Authorization': `Bearer ${this.getToken()}`, // Ajout du header d'authentification
     });
     return this.http.put(this.apiUrl + '/piece/' + roomId + '/put', roomData, { headers });
+  }
+
+  getToken() {
+    let token = localStorage.getItem('token')
+    if(token) {
+      return token;
+    } else {
+      return this.tokenMock;
+    }
   }
 }
