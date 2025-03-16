@@ -16,10 +16,9 @@ export class AuthService {
   }
 
   register(userData: { email: string; password: string }): Observable<any> {
-    console.log('📡 Envoi des données avec header JSON:', userData);
-    return this.http.post(`${this.apiUrl}/register/user`, userData, {
+    console.log('Envoi des données avec header JSON:', userData);
+    return this.http.post(`${this.apiUrl}/enregistrer/utilisateur`, userData, {
         headers: new HttpHeaders({ 'Content-Type': 'application/json' }) // Forcer JSON
     });
 }
-
 }
