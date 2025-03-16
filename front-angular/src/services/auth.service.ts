@@ -7,7 +7,7 @@ import { HttpHeaders } from '@angular/common/http';
   providedIn: 'root'
 })
 export class AuthService {
-  private apiUrl = 'http://localhost:8080/api'; // URL du backend Symfony
+  private apiUrl = 'http://localhost:80/api'; // URL du backend Symfony
 
   constructor(private http: HttpClient) {}
 
