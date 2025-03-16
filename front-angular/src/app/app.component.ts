@@ -1,11 +1,12 @@
 import { Component, HostListener, OnInit, signal } from '@angular/core';
 import { SideBarComponent } from '../pages/side-bar/side-bar.component';
 import { MainComponent } from '../main/main.component';
+import { RouterOutlet } from '@angular/router';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [SideBarComponent, MainComponent],
+  imports: [SideBarComponent, MainComponent, RouterOutlet],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })
