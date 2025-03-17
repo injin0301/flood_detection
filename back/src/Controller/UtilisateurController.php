@@ -44,6 +44,15 @@ final class UtilisateurController extends AbstractController
         $this->serializer = new Serializer($normalizer, $encoding);
     }
 
+    /**
+     * Récupère tous les utilisateurs.
+     *
+     * @param Request $request La requête HTTP.
+     * @param UtilisateurRepository $uRepository Le dépôt des utilisateurs.
+     * @param CsrfTokenManagerInterface $csrfTokenManager Le gestionnaire de tokens CSRF.
+     *
+     * @return JsonResponse La réponse JSON contenant la liste des utilisateurs.
+     */
     #[Route('/tous/utilisateurs', name: '_tous_utilisateur', methods: ['GET'])]
     #[OA\Response(
         response: 200,
@@ -90,6 +99,17 @@ final class UtilisateurController extends AbstractController
         ]);
     }
 
+    /**
+     * Met à jour un utilisateur.
+     *
+     * @param Utilisateur $utilisateur L'utilisateur à mettre à jour.
+     * @param Request $request La requête HTTP.
+     * @param EntityManagerInterface $em Le gestionnaire d'entités.
+     * @param PieceRepository $pRepository Le dépôt des pièces.
+     * @param UserPasswordHasherInterface $passwordHasher Le service de hachage de mot de passe.
+     *
+     * @return Response La réponse HTTP.
+     */
     #[Route('/utilisateur/{utilisateur<\d*>}', name: '_utilisateur_put', methods: ['PUT'])]
     #[OA\RequestBody(
         required: true,

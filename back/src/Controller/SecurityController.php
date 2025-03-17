@@ -43,6 +43,18 @@ final class SecurityController extends AbstractController
         $this->serializer = new Serializer($normalizer, $encoding);
     }
 
+    /**
+     * Authentifie un utilisateur et génère un token JWT.
+     *
+     * @param Request $request La requête HTTP.
+     * @param UtilisateurRepository $uRepository Le dépôt des utilisateurs.
+     * @param HexTextProtectRepository $htRepository Le dépôt des protections de texte hexadécimal.
+     * @param UserPasswordHasherInterface $passwordHasher Le service de hachage de mot de passe.
+     * @param JWTTokenManagerInterface $jwtManager Le gestionnaire de tokens JWT.
+     * @param HexTextService $hexTextService Le service de texte hexadécimal.
+     *
+     * @return JsonResponse La réponse JSON contenant le token JWT.
+     */
     #[Route('/login', name: '_login', methods: ['POST'])]
     #[OA\RequestBody(
         required: true,
@@ -107,6 +119,16 @@ final class SecurityController extends AbstractController
         return $this->json(['token' => $token]);
     }
 
+    /**
+     * Crée un nouvel utilisateur.
+     *
+     * @param Request $request La requête HTTP.
+     * @param UtilisateurRepository $uRepository Le dépôt des utilisateurs.
+     * @param EntityManagerInterface $em Le gestionnaire d'entités.
+     * @param UserPasswordHasherInterface $passwordHasher Le service de hachage de mot de passe.
+     *
+     * @return JsonResponse La réponse JSON indiquant le succès ou l'échec de la création de l'utilisateur.
+     */
     #[Route('/enregistrer/utilisateur', name: '_register_user', methods: ['POST'])]
     #[OA\RequestBody(
         required: true,

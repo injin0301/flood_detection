@@ -40,6 +40,13 @@ final class ApiController extends AbstractController
         $this->serializer = new Serializer($normalizer, $encoding);
     }
 
+    /**
+     * Récupère toutes les pièces.
+     *
+     * @param PieceRepository $pRepository Le dépôt des pièces.
+     *
+     * @return JsonResponse La réponse JSON contenant la liste des pièces.
+     */
     #[Route('/toutes/pieces', name: '_all_piece', methods: ['GET'])]
     #[OA\Response(
         response: 200,
@@ -75,6 +82,16 @@ final class ApiController extends AbstractController
         ]);
     }
 
+    /**
+     * Met à jour une pièce via PUT.
+     *
+     * @param Piece $piece La pièce à mettre à jour.
+     * @param Request $request La requête HTTP.
+     * @param EntityManagerInterface $em Le gestionnaire d'entités.
+     * @param UtilisateurRepository $uRepository Le dépôt des utilisateurs.
+     *
+     * @return Response La réponse HTTP.
+     */
     #[Route('/piece/{piece<\d*>}/put', name: '_update_piece_put', methods: ['PUT'])]
     #[OA\RequestBody(
         required: true,
@@ -134,6 +151,16 @@ final class ApiController extends AbstractController
         return $this->json(['message' => 'Piece modifiée'], 200);
     }
 
+    /**
+     * Met à jour une pièce via PATCH.
+     *
+     * @param Piece $piece La pièce à mettre à jour.
+     * @param Request $request La requête HTTP.
+     * @param EntityManagerInterface $em Le gestionnaire d'entités.
+     * @param UtilisateurRepository $uRepository Le dépôt des utilisateurs.
+     *
+     * @return JsonResponse La réponse JSON.
+     */
     #[Route('/piece/{piece<\d*>}/patch', name: '_update_piece_path', methods: ['PATCH'])]
     #[OA\RequestBody(
         required: false,
@@ -192,6 +219,14 @@ final class ApiController extends AbstractController
         return $this->json(['message' => 'Piece modifié'], 200);
     }
 
+    /**
+     * Supprime une pièce.
+     *
+     * @param Piece $piece La pièce à supprimer.
+     * @param EntityManagerInterface $em Le gestionnaire d'entités.
+     *
+     * @return JsonResponse La réponse JSON.
+     */
     #[Route('/piece/{piece<\d*>}/suppression', name: '_delete_piece', methods: ['DELETE'])]
     #[OA\Response(
         response: 204,
@@ -225,6 +260,16 @@ final class ApiController extends AbstractController
         return $this->json([], 204);
     }
 
+    /**
+     * Crée une nouvelle pièce.
+     *
+     * @param Request $request La requête HTTP.
+     * @param PieceRepository $pRepository Le dépôt des pièces.
+     * @param UtilisateurRepository $uRepository Le dépôt des utilisateurs.
+     * @param EntityManagerInterface $em Le gestionnaire d'entités.
+     *
+     * @return JsonResponse La réponse JSON.
+     */
     #[Route('/piece/ajout', name: '_add_piece', methods: ['POST'])]
     #[OA\RequestBody(
         required: true,
@@ -282,6 +327,13 @@ final class ApiController extends AbstractController
         return $this->json(['message' => 'Pièce créée'], 201);
     }
 
+    /**
+     * Récupère les détails d'une pièce.
+     *
+     * @param Piece $piece La pièce à récupérer.
+     *
+     * @return JsonResponse La réponse JSON contenant les détails de la pièce.
+     */
     #[Route('/piece/{piece<\d*>}', name: '_get_piece', methods: ['GET'])]
     #[OA\Response(
         response: 200,

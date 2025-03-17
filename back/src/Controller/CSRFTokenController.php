@@ -16,6 +16,14 @@ use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 #[OA\Tag(name: 'CSRF Token')]
 final class CSRFTokenController extends AbstractController
 {
+    /**
+     * Génère un CSRF Token.
+     *
+     * @param Request $request La requête HTTP.
+     * @param CsrfTokenManagerInterface $csrfTokenManager Le gestionnaire de tokens CSRF.
+     *
+     * @return JsonResponse La réponse JSON contenant le CSRF Token.
+     */
     #[Route('/', name: '_init', methods: ['GET'])]
     #[OA\Response(
         response: 200,
@@ -36,6 +44,14 @@ final class CSRFTokenController extends AbstractController
         ]);
     }
 
+    /**
+     * Valide un CSRF Token.
+     *
+     * @param Request $request La requête HTTP.
+     * @param CsrfTokenManagerInterface $csrfTokenManager Le gestionnaire de tokens CSRF.
+     *
+     * @return JsonResponse La réponse JSON indiquant si le CSRF Token est valide.
+     */
     #[Route('/protected-action', name: '_protected-action', methods: ['POST'])]
     #[OA\RequestBody(
         required: true,

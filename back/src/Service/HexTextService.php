@@ -10,17 +10,30 @@ use Doctrine\ORM\EntityManagerInterface;
 class HexTextService
 {
     private Utilisateur $utilisateur;
+
     public function __construct(
         private EntityManagerInterface $em,
         private HexTextProtectRepository $htpRepository
     ) {
     }
 
+    /**
+     * Définit l'utilisateur pour le service.
+     *
+     * @param Utilisateur $utilisateur L'utilisateur à définir.
+     */
     public function setUtilisateur(Utilisateur $utilisateur): void
     {
         $this->utilisateur = $utilisateur;
     }
 
+    /**
+     * Génère un texte hexadécimal aléatoire.
+     *
+     * @param int $length La longueur du texte hexadécimal à générer.
+     *
+     * @return string Le texte hexadécimal généré.
+     */
     public function generateHexText(int $length = 16): string
     {
         $characters = '0123456789abcdef';
@@ -33,6 +46,13 @@ class HexTextService
         return $hexText;
     }
 
+    /**
+     * Sauvegarde le texte hexadécimal pour l'utilisateur.
+     *
+     * @param string $hexText Le texte hexadécimal à sauvegarder.
+     *
+     * @return HexTextProtect L'entité HexTextProtect sauvegardée.
+     */
     public function saveHexText(string $hexText): HexTextProtect
     {
         // Vérifiez si une entité HexTextProtect existe déjà pour l'utilisateur
